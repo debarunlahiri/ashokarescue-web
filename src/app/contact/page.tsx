@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo";
+import { breadcrumbSchema } from "@/lib/schema";
+import { buildMetadata } from "@/lib/seo";
 import { Phone } from "lucide-react";
 import { AssistanceSection, PageHero } from "@/components/common";
 import { ContactChannels, NextSteps, OfficeLocation } from "@/components/contact";
 import { WhatsAppIcon } from "@/components/icons";
 import { contactPage, images, site } from "@/data";
 
-export const metadata: Metadata = contactPage.meta;
+export const metadata: Metadata = buildMetadata({ meta: contactPage.meta, path: "/contact" });
 
 export default function ContactPage() {
   const { hero } = contactPage;
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }])} />
       <PageHero
         eyebrow={hero.eyebrow}
         title={hero.title}

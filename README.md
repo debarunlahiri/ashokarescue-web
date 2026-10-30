@@ -66,6 +66,20 @@ Each component folder has an `index.ts` barrel, so imports look like `import { H
 
 Adding a service: add an entry to `services` in `src/data/services.ts`. The detail page and the Services menu entry are generated from it.
 
+## SEO
+
+| What | Where |
+| --- | --- |
+| Page title and description | `meta` in each file under `src/data/` (`home.ts`/`site.ts`, `about.ts`, `services.ts`, `contact.ts`, `faqs.ts`, `legal.ts`) |
+| Keywords, share image, Search Console codes, length rules | `src/data/seo.ts` |
+| Canonical, Open Graph and Twitter tags | `buildMetadata()` in `src/lib/seo.ts` |
+| Structured data (business, website, services, FAQs, breadcrumbs) | `src/lib/schema.ts` |
+| Sitemap, robots, web manifest | `src/app/sitemap.ts`, `robots.ts`, `manifest.ts` |
+
+**Check your pages:** run `npm run dev` and open <http://localhost:3000/seo-report>. It lists every page's title, description and keywords, flags lengths that are too short or long, and flags duplicates. The report is hidden in production.
+
+After deploying: set `SITE_URL` in `src/lib/constants.ts`, paste the verification codes into `seoDefaults.verification`, then submit `/sitemap.xml` in Google Search Console.
+
 ## Before going live
 
 - **Enquiry form:** `src/app/api/enquiry/route.ts` currently only logs submissions. Connect it to email (e.g. Resend, SMTP) or a CRM.

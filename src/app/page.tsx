@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { AssistanceSection, ServiceMarquee } from "@/components/common";
+import { site } from "@/data";
+import { buildMetadata } from "@/lib/seo";
 import {
   ClosingCta,
   FieldGallery,
@@ -9,6 +12,8 @@ import {
   PatientFirst,
   ServicesShowcase,
 } from "@/components/home";
+
+export const metadata: Metadata = buildMetadata({ meta: site.meta, path: "/" });
 
 export default function HomePage() {
   return (

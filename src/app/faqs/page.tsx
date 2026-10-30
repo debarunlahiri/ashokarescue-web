@@ -1,28 +1,21 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo";
+import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { buildMetadata } from "@/lib/seo";
 import { Phone } from "lucide-react";
 import { Reveal } from "@/components/animations";
 import { CtaBanner, PageHero, SectionHeading } from "@/components/common";
 import { Accordion } from "@/components/ui";
 import { faqPage, faqs, images, site } from "@/data";
 
-export const metadata: Metadata = faqPage.meta;
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.question,
-    acceptedAnswer: { "@type": "Answer", text: faq.answer },
-  })),
-};
+export const metadata: Metadata = buildMetadata({ meta: faqPage.meta, path: "/faqs" });
 
 export default function FaqsPage() {
   const { hero, intro, cta } = faqPage;
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <JsonLd data={[faqSchema(faqs), breadcrumbSchema([{ name: "Home", path: "/" }, { name: "FAQs", path: "/faqs" }])]} />
       <PageHero eyebrow={hero.eyebrow} title={hero.title} description={hero.text} caption={hero.caption} image={images.airAmbulance.icuCabin} />
 
       <section className="container-x grid gap-14 py-24 md:py-32 lg:grid-cols-12">

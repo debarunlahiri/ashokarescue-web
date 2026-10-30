@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
 import { site } from "@/data";
+
+export const metadata: Metadata = { title: "Page not found | Ashoka Rescue", robots: { index: false, follow: false } };
 
 export default function NotFound() {
   return (

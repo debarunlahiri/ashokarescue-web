@@ -98,6 +98,8 @@ export default function HeroCarousel() {
         touchX.current = null;
       }}
     >
+      <h1 className="sr-only">{site.name} — air ambulance and critical care medical transport in India and worldwide</h1>
+
       {/* images */}
       <AnimatePresence initial={false} custom={dir}>
         <motion.div
@@ -154,7 +156,7 @@ export default function HeroCarousel() {
               <motion.p className="eyebrow eyebrow-light" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0, transition: { delay: 0.35, duration: 0.8, ease } }}>
                 {slide.eyebrow}
               </motion.p>
-              <h1 className="display mt-6 text-[2.7rem] sm:text-6xl lg:text-[5.4rem]">
+              <h2 className="display mt-6 text-[2.7rem] sm:text-6xl lg:text-[5.4rem]">
                 {lines.map((l, i) => (
                   <span key={i} className="block overflow-hidden pb-[0.06em]">
                     <motion.span
@@ -166,7 +168,7 @@ export default function HeroCarousel() {
                     </motion.span>
                   </span>
                 ))}
-              </h1>
+              </h2>
               <motion.p
                 className="mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg"
                 initial={{ opacity: 0, y: 20 }}

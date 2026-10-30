@@ -16,7 +16,7 @@ export default function PatientFirst() {
             <ClipReveal className="relative aspect-[4/5] overflow-hidden rounded-[2rem]">
               <ParallaxImage image={images.hero.inflightMonitoring} sizes="(min-width: 1024px) 50vw, 100vw" imageClassName="object-[35%_center]" />
             </ClipReveal>
-            <Reveal delay={0.3} className="glass absolute -bottom-8 right-4 max-w-xs rounded-3xl p-6 md:-right-8">
+            <Reveal delay={0.3} className="absolute -bottom-8 right-4 z-10 max-w-xs rounded-3xl bg-navy p-6 text-white shadow-[0_30px_60px_-20px_rgba(7,19,48,0.6)] ring-1 ring-white/15 md:-right-8">
               <Quote className="size-6 text-sun" />
               <p className="mt-3 text-xl font-bold leading-snug tracking-tight">{quote}</p>
             </Reveal>
