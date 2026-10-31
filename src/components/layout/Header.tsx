@@ -49,7 +49,7 @@ export default function Header() {
         className={cn(
           "fixed inset-x-0 top-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
           isScrolled && !isMenuOpen
-            ? "border-white/15 bg-ink/55 shadow-[0_20px_60px_-20px_rgba(7,19,48,0.6)] backdrop-blur-lg backdrop-saturate-150"
+            ? "border-white/10 bg-ink/80 shadow-[0_12px_40px_-16px_rgba(7,19,48,0.55)] backdrop-blur-lg backdrop-saturate-150 supports-[not(backdrop-filter:blur(1px))]:bg-ink"
             : "border-transparent bg-ink",
         )}
       >
