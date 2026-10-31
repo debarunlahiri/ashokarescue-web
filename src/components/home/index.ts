@@ -2,6 +2,7 @@ export { default as HeroCarousel } from "./HeroCarousel";
 export { default as ServicesShowcase } from "./ServicesShowcase";
 export { default as PatientFirst } from "./PatientFirst";
 export { default as HowItWorks } from "./HowItWorks";
+export { default as JourneyAnimation } from "./JourneyAnimation";
 export { default as GlobalReach } from "./GlobalReach";
 export { default as FieldGallery } from "./FieldGallery";
 export { default as HomeFaq } from "./HomeFaq";

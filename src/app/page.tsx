@@ -9,6 +9,7 @@ import {
   HeroCarousel,
   HomeFaq,
   HowItWorks,
+  JourneyAnimation,
   PatientFirst,
   ServicesShowcase,
 } from "@/components/home";
@@ -21,6 +22,7 @@ export default function HomePage() {
       <HeroCarousel />
       <ServiceMarquee />
       <ServicesShowcase />
+      <JourneyAnimation />
       <PatientFirst />
       <HowItWorks />
       <GlobalReach />

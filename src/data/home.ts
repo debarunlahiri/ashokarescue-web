@@ -94,6 +94,18 @@ export const home = {
       },
     ],
   },
+  journey: {
+    eyebrow: "Bedside to bedside",
+    title: ["One journey.", "Every leg coordinated."],
+    description: "How a typical transfer works: we collect the patient from their hospital bed, drive them to the aircraft, fly them with a medical crew, and drive them on to the receiving hospital.",
+    stages: [
+      { title: "Bedside pickup", text: "Our team wheels the patient out of the ward on a stretcher and loads them into the ambulance." },
+      { title: "Road to the airport", text: "An ICU ambulance drives to the aircraft, where the patient is boarded by stretcher." },
+      { title: "In the air", text: "The flight, with a critical-care team monitoring throughout." },
+      { title: "On landing", text: "The patient is moved straight from the aircraft into a waiting ambulance." },
+      { title: "Bedside handover", text: "We wheel the patient into the receiving hospital and hand over to their team." },
+    ],
+  },
   howItWorks: {
     eyebrow: "How it works",
     title: ["A clear plan.", "From your first call to arrival."],

@@ -340,3 +340,64 @@ html.lenis body {
     animation: none !important;
   }
 }
+
+/* Journey scene: day/night colour tokens (SVG fills read these), cross-faded on toggle. */
+.journey-scene {
+  --s-ground: rgb(12 33 96 / 0.035);
+  --s-line: rgb(12 33 96 / 0.1);
+  --s-guide: rgb(12 33 96 / 0.16);
+  --s-building: rgb(12 33 96 / 0.1);
+  --s-tower: rgb(12 33 96 / 0.12);
+  --s-tower-top: rgb(12 33 96 / 0.17);
+  --s-runway: rgb(12 33 96 / 0.07);
+  --s-window: rgb(255 255 255 / 0.75);
+  --s-entrance: rgb(12 33 96 / 0.22);
+  --s-label: var(--color-slate);
+  --s-stretcher: rgb(12 33 96 / 0.5);
+}
+.journey-scene.is-night {
+  --s-ground: rgb(255 255 255 / 0.04);
+  --s-line: rgb(255 255 255 / 0.16);
+  --s-guide: rgb(255 255 255 / 0.22);
+  --s-building: rgb(255 255 255 / 0.09);
+  --s-tower: rgb(255 255 255 / 0.11);
+  --s-tower-top: rgb(255 255 255 / 0.16);
+  --s-runway: rgb(255 255 255 / 0.07);
+  --s-window: rgb(255 210 154 / 0.9);
+  --s-entrance: rgb(255 210 154 / 0.4);
+  --s-label: rgb(255 255 255 / 0.75);
+  --s-stretcher: rgb(255 255 255 / 0.6);
+}
+.journey-scene svg rect,
+.journey-scene svg path,
+.journey-scene svg line,
+.journey-scene svg text {
+  transition: fill 1.2s ease, stroke 1.2s ease;
+}
+.journey-scene .night-only {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.journey-scene.is-night .night-only {
+  opacity: 1;
+}
+.journey-scene .sun-disc,
+.journey-scene .moon-disc,
+.journey-scene .journey-cloud {
+  transition: opacity 1.4s ease, transform 1.4s ease;
+}
+.journey-scene .moon-disc {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.journey-scene.is-night .sun-disc {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.journey-scene.is-night .moon-disc {
+  opacity: 1;
+  transform: none;
+}
+.journey-scene.is-night .journey-cloud {
+  opacity: 0.35;
+}
