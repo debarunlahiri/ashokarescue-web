@@ -9,8 +9,8 @@ import SectionHeading from "./SectionHeading";
 /** "Request assistance" block with the enquiry form. Anchor: #assistance */
 export default function AssistanceSection() {
   return (
-    <section id="assistance" className="relative scroll-mt-24 overflow-hidden bg-mist py-24 md:py-32">
-      <div aria-hidden className="absolute -right-40 top-0 size-[600px] rounded-full bg-sky/40 blur-[160px]" />
+    <section id="assistance" className="relative scroll-mt-32 overflow-hidden bg-mist py-24 md:py-32">
+      <div aria-hidden className="absolute -right-40 top-0 size-[600px] rounded-full glow text-sky/40 scale-150" />
       <div className="container-x relative grid gap-14 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionHeading eyebrow={assistance.eyebrow} title={assistance.title} description={assistance.text} />

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { SocialIcon } from "@/components/icons";
 import { Logo } from "@/components/ui";
 import { navigation, site } from "@/data";
-import { EASE_OUT_EXPO } from "@/lib/constants";
+import { setScrollLocked } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
 import MobileMenu from "./MobileMenu";
@@ -17,15 +17,14 @@ export default function Header() {
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMegaOpen, setIsMegaOpen] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    setIsScrolled(y > 40);
-    setIsHidden(y > 400 && y > previous && !isMenuOpen);
-  });
+  useMotionValueEvent(scrollY, "change", (y) => setIsScrolled(y > 20));
+
+  useEffect(() => {
+    setIsScrolled(window.scrollY > 20);
+  }, []);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -33,19 +32,34 @@ export default function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-  }, [isMenuOpen]);
+    if (!isMegaOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsMegaOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isMegaOpen]);
 
-  const isSolid = isScrolled || isMenuOpen;
+  useEffect(() => {
+    setScrollLocked(isMenuOpen);
+    return () => setScrollLocked(false);
+  }, [isMenuOpen]);
 
   return (
     <>
-      <motion.header
-        animate={{ y: isHidden ? "-110%" : "0%" }}
-        transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-        className="fixed inset-x-0 top-0 z-50"
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
+          isScrolled && !isMenuOpen
+            ? "border-white/15 bg-ink/55 shadow-[0_20px_60px_-20px_rgba(7,19,48,0.6)] backdrop-blur-lg backdrop-saturate-150"
+            : "border-transparent bg-ink",
+        )}
       >
-        <div className={cn("hidden overflow-hidden transition-all duration-500 md:block", isSolid ? "h-0 opacity-0" : "h-9 opacity-100")}>
+        <div
+          aria-hidden={isScrolled}
+          className={cn(
+            "hidden overflow-hidden border-b transition-[height,opacity,border-color] duration-500 md:block",
+            isScrolled ? "pointer-events-none h-0 border-transparent opacity-0" : "h-9 border-white/10 opacity-100",
+          )}
+        >
           <div className="container-x flex h-9 items-center justify-between text-[0.78rem] text-white/80">
             <div className="flex items-center divide-x divide-white/15">
               <a href={site.phones.emergency.href} className="flex items-center gap-2 pr-4 transition-colors hover:text-white">
@@ -68,16 +82,15 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="container-x pt-2 md:pt-0">
-          <div
-            className={cn(
-              "flex items-center justify-between rounded-3xl px-2 transition-all duration-500",
-              isSolid ? "mt-2 bg-ink/85 py-2 shadow-[0_20px_60px_-20px_rgba(7,19,48,0.6)] ring-1 ring-white/10 backdrop-blur-xl" : "py-3",
-            )}
-          >
-            <Logo />
+        <div className="container-x">
+          <div className="relative flex h-20 items-center justify-between md:h-24">
+            <Logo className="[&_img]:size-14 md:[&_img]:size-[4.5rem]" />
 
-            <nav className="relative hidden items-center gap-1 lg:flex" onMouseLeave={() => setIsMegaOpen(false)}>
+            <nav className="hidden items-center gap-1 self-stretch lg:flex" onMouseLeave={() => setIsMegaOpen(false)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
+              }}
+            >
               {navigation.map((item) => {
                 const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const isServices = item.href === "/services";
@@ -101,7 +114,15 @@ export default function Header() {
                     {content}
                   </a>
                 ) : (
-                  <Link key={item.href} href={item.href} className={className} onMouseEnter={() => setIsMegaOpen(isServices)}>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={className}
+                    onMouseEnter={() => setIsMegaOpen(isServices)}
+                    onFocus={() => setIsMegaOpen(isServices)}
+                    aria-haspopup={isServices || undefined}
+                    aria-expanded={isServices ? isMegaOpen : undefined}
+                  >
                     {content}
                   </Link>
                 );
@@ -109,14 +130,14 @@ export default function Header() {
               <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
             </nav>
 
-            <div className="flex items-stretch gap-2 self-stretch">
-              <a href={site.phones.emergency.href} className="btn btn-primary hidden !rounded-2xl !py-0 !text-base sm:inline-flex">
+            <div className="flex items-center gap-2">
+              <a href={site.phones.emergency.href} className="btn btn-primary hidden h-11 shrink-0 self-center !py-0 sm:inline-flex">
                 <Phone className="size-4" /> Call 24/7
               </a>
               <button
                 type="button"
                 onClick={() => setIsMenuOpen((open) => !open)}
-                className="grid size-12 place-items-center self-center rounded-2xl bg-white/10 text-white lg:hidden"
+                className="grid size-12 place-items-center rounded-2xl bg-white/10 text-white lg:hidden"
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMenuOpen}
               >
@@ -125,7 +146,7 @@ export default function Header() {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence>{isMenuOpen && <MobileMenu />}</AnimatePresence>
     </>

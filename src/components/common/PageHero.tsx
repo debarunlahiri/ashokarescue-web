@@ -19,9 +19,9 @@ type PageHeroProps = {
 /** Dark split hero used at the top of inner pages. */
 export default function PageHero({ eyebrow, title, description, image, caption, actions }: PageHeroProps) {
   return (
-    <section className="grain relative overflow-hidden bg-ink pb-20 pt-36 text-white md:pb-28 md:pt-44">
-      <div aria-hidden className="absolute -left-40 top-20 size-[520px] rounded-full bg-royal/40 blur-[140px]" />
-      <div aria-hidden className="absolute -right-20 bottom-0 size-[380px] rounded-full bg-sun/20 blur-[140px]" />
+    <section className="grain relative overflow-hidden bg-ink pb-20 pt-14 text-white md:pb-28 md:pt-20">
+      <div aria-hidden className="absolute -left-40 top-20 size-[520px] rounded-full glow text-royal/40 scale-150" />
+      <div aria-hidden className="absolute -right-20 bottom-0 size-[380px] rounded-full glow text-sun/20 scale-150" />
 
       <div className="container-x relative grid items-center gap-14 lg:grid-cols-12">
         <div className="lg:col-span-6">

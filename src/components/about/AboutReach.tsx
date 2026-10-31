@@ -16,8 +16,8 @@ export default function AboutReach() {
       <SectionHeading eyebrow={reach.eyebrow} title={reach.title} description={reach.text} />
 
       <Reveal className="relative mt-14 overflow-hidden rounded-[2rem] bg-ink text-white">
-        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-royal/40 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-24 size-80 rounded-full bg-sun/15 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full glow text-royal/40 scale-125" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-24 size-80 rounded-full glow text-sun/15 scale-125" />
 
         <div className="relative grid divide-y divide-white/10 md:grid-cols-2 md:divide-x md:divide-y-0">
           {regions.map(({ Icon, ...region }) => (

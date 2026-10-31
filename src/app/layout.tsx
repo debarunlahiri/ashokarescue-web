@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "@/styles/globals.css";
 import { FloatingActions, Footer, Header, SmoothScroll } from "@/components/layout";
 import { JsonLd } from "@/components/seo";
@@ -51,6 +52,14 @@ export const viewport: Viewport = { themeColor: "#071330", width: "device-width"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <Script id="gtm-datalayer" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`}
+        </Script>
+        <Script src="https://www.googletagmanager.com/gtm.js?id=GTM-KT9XDPRN" strategy="afterInteractive" />
+      </head>
       <body className="overflow-x-hidden">
         <JsonLd data={[organizationSchema, websiteSchema]} />
         <SmoothScroll />
@@ -58,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" className="pt-[var(--header-h)]">{children}</main>
         <Footer />
         <FloatingActions />
       </body>

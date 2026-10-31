@@ -16,7 +16,7 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden bg-ink text-white">
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-royal/30 blur-[140px]" />
+      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full glow text-royal/30 scale-150" />
 
       <div className="container-x relative border-b border-white/10 py-14 md:py-20">
         <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">

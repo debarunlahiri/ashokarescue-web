@@ -8,10 +8,12 @@ const rowTwo = [...galleries.roadAmbulance, ...galleries.airAmbulance.slice(8, 1
 function GalleryRow({ photos, reverse = false }: { photos: string[]; reverse?: boolean }) {
   const loop = [...photos, ...photos];
   return (
-    <div className="flex w-max animate-marquee gap-4 hover:[animation-play-state:paused]" style={{ animationDirection: reverse ? "reverse" : "normal", animationDuration: "70s" }}>
+    <div className="flex w-max animate-marquee hover:[animation-play-state:paused]" style={{ animationDirection: reverse ? "reverse" : "normal", animationDuration: "70s" }}>
       {loop.map((src, i) => (
-        <div key={`${src}-${i}`} className="relative h-56 w-44 shrink-0 overflow-hidden rounded-2xl md:h-72 md:w-56">
+        <div key={`${src}-${i}`} className="shrink-0 pr-4" aria-hidden={i >= photos.length || undefined}>
+          <div className="relative h-56 w-44 overflow-hidden rounded-2xl md:h-72 md:w-56">
           <Image src={src} alt={i < photos.length ? "Ashoka Rescue medical transport in the field" : ""} fill sizes="224px" className="object-cover transition-transform duration-700 hover:scale-110" />
+          </div>
         </div>
       ))}
     </div>

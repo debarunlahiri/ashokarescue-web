@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { routeMap } from "@/data";
 import type { MapCity } from "@/types";
 import { EASE_OUT_EXPO } from "@/lib/constants";
@@ -25,9 +26,12 @@ const labelOffset: Record<NonNullable<MapCity["labelPosition"]>, { dx: number; d
 /** Dotted world map with animated routes from the Delhi hub. */
 export default function WorldRouteMap() {
   const { hub, destinations } = routeMap;
+  const ref = useRef<HTMLDivElement>(null);
+  // Looping route/hub animations only run while the map is on screen.
+  const isVisible = useInView(ref, { margin: "100px" });
 
   return (
-    <div className="relative mx-auto aspect-[148/70] w-full max-w-6xl">
+    <div ref={ref} className="relative mx-auto aspect-[148/70] w-full max-w-6xl">
       <Image src="/images/maps/world-dots.svg" alt="" aria-hidden fill unoptimized className="select-none object-contain opacity-35" />
 
       <svg
@@ -63,7 +67,7 @@ export default function WorldRouteMap() {
                 viewport={{ once: true }}
                 transition={{ duration: 1.8, delay: 0.3 + i * 0.15, ease: EASE_OUT_EXPO }}
               />
-              <circle r={0.55} fill="#ffd29a" className="route-pulse" style={{ offsetPath: `path("${d}")`, animationDelay: `${i * 0.55}s` }} />
+              <circle r={0.55} fill="#ffd29a" className={isVisible ? "route-pulse" : "opacity-0"} style={{ offsetPath: `path("${d}")`, animationDelay: `${i * 0.55}s` }} />
               <motion.g
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -81,7 +85,7 @@ export default function WorldRouteMap() {
           );
         })}
 
-        <circle cx={hub.x} cy={hub.y} r={6} fill="url(#hub-glow)" className="animate-pulse" />
+        <circle cx={hub.x} cy={hub.y} r={6} fill="url(#hub-glow)" className={isVisible ? "animate-pulse" : undefined} />
         <circle cx={hub.x} cy={hub.y} r={1.1} fill="#f4a24c" stroke="#071330" strokeWidth={0.35} />
         <text x={hub.x + 2} y={hub.y - 1.8} fontSize={2.3} fontWeight={700} fill="#ffffff">{hub.name}</text>
       </svg>

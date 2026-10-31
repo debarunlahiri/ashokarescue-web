@@ -5,6 +5,7 @@ import { ArrowUp, Phone } from "lucide-react";
 import { useState } from "react";
 import { WhatsAppIcon } from "@/components/icons";
 import { site } from "@/data";
+import { scrollToTop } from "@/lib/lenis";
 
 export default function FloatingActions() {
   const { scrollY } = useScroll();
@@ -20,7 +21,7 @@ export default function FloatingActions() {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={scrollToTop}
             className="grid size-11 place-items-center rounded-full bg-white text-ink shadow-lg ring-1 ring-ink/10 transition hover:-translate-y-0.5"
             aria-label="Back to top"
           >

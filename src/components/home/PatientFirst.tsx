@@ -8,7 +8,7 @@ export default function PatientFirst() {
 
   return (
     <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-      <div aria-hidden className="absolute left-1/3 top-0 size-[600px] rounded-full bg-royal/30 blur-[160px]" />
+      <div aria-hidden className="absolute left-1/3 top-0 size-[600px] rounded-full glow text-royal/30 scale-150" />
 
       <div className="container-x relative">
         <div className="grid items-center gap-14 lg:grid-cols-12">

@@ -1244,3 +1244,50 @@ export function getRelatedServices(slug: string, count = 3) {
 export const serviceOptions = services
   .filter((service) => !["air-ambulance-services-in-india", "emergency-medical-transportation-services"].includes(service.slug))
   .map((service) => service.name);
+
+/** Services grouped for the navigation menus (desktop mega menu + mobile menu). */
+export const serviceMenuGroups: { title: string; slugs: string[] }[] = [
+  {
+    title: "By air, rail & road",
+    slugs: [
+      "charter-air-ambulance-service-in-india",
+      "air-ambulance-services-in-india",
+      "commercial-stretcher-service",
+      "business-class-medical-assistance",
+      "medical-escort-and-transport",
+      "train-ambulance-service-in-india",
+      "road-ambulance-service-in-india",
+      "emergency-medical-transportation-services",
+    ],
+  },
+  {
+    title: "Specialised patient care",
+    slugs: [
+      "patient-transfer-on-ecmo",
+      "transporting-critical-patients-with-advanced-life-saving-equipment",
+      "heart-and-lung-transplant-patient-shifting",
+      "neonate-medical-transport-service",
+      "paediatric-medical-transport-service",
+      "transporting-kidney-failure-patients",
+      "cancer-patients-transportation",
+    ],
+  },
+  {
+    title: "Planning & guides",
+    slugs: ["medical-tourism-india", "cost-of-transporting-a-patient-from-india-to-canada"],
+  },
+];
+
+/** Menu groups resolved to full service objects; any service not listed falls into the last group. */
+export const serviceMenu = (() => {
+  const bySlug = new Map(services.map((s) => [s.slug, s]));
+  const listed = new Set(serviceMenuGroups.flatMap((g) => g.slugs));
+  const unlisted = services.filter((s) => !listed.has(s.slug));
+  return serviceMenuGroups.map((group, i) => ({
+    title: group.title,
+    items: [
+      ...group.slugs.map((slug) => bySlug.get(slug)).filter((s): s is Service => Boolean(s)),
+      ...(i === serviceMenuGroups.length - 1 ? unlisted : []),
+    ],
+  }));
+})();

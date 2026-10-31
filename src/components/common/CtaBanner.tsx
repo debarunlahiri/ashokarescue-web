@@ -18,7 +18,7 @@ export default function CtaBanner({ eyebrow, title, description, image }: CtaBan
       <div className="grain relative overflow-hidden rounded-[2.5rem] bg-navy px-6 py-16 text-white md:px-16 md:py-24">
         {image && <Image src={image.src} alt="" aria-hidden fill sizes="100vw" className="object-cover opacity-30 mix-blend-luminosity" />}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-navy via-navy/85 to-royal/60" />
-        <div aria-hidden className="absolute -bottom-32 -right-32 size-[420px] rounded-full bg-sun/30 blur-[120px]" />
+        <div aria-hidden className="absolute -bottom-32 -right-32 size-[420px] rounded-full glow text-sun/30 scale-150" />
 
         <div className="relative grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

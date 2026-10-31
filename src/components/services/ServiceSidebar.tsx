@@ -9,7 +9,7 @@ export default function ServiceSidebar({ relatedServices }: { relatedServices: S
   return (
     <div className="grid gap-5 lg:sticky lg:top-28">
       <Reveal className="relative overflow-hidden rounded-[2rem] bg-ink p-7 text-white">
-        <div aria-hidden className="absolute -right-16 -top-16 size-52 rounded-full bg-royal/50 blur-3xl" />
+        <div aria-hidden className="absolute -right-16 -top-16 size-52 rounded-full glow text-royal/50 scale-125" />
         <div className="relative">
           <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-sky"><Clock className="size-4" /> Available 24/7</p>
           <h2 className="mt-4 text-2xl font-bold tracking-tight">Speak with our medical transport team</h2>

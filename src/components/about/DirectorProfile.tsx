@@ -8,7 +8,7 @@ export default function DirectorProfile() {
 
   return (
     <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-      <div aria-hidden className="absolute -right-40 top-10 size-[560px] rounded-full bg-royal/30 blur-[160px]" />
+      <div aria-hidden className="absolute -right-40 top-10 size-[560px] rounded-full glow text-royal/30 scale-150" />
 
       <div className="container-x relative grid items-center gap-14 lg:grid-cols-12">
         <div className="lg:col-span-5">

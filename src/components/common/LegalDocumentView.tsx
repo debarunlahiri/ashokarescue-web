@@ -5,8 +5,8 @@ import { padNumber } from "@/lib/utils";
 export default function LegalDocumentView({ document }: { document: LegalDocument }) {
   return (
     <>
-      <section className="relative overflow-hidden bg-ink pb-16 pt-40 text-white md:pb-20 md:pt-48">
-        <div aria-hidden className="absolute -left-40 top-10 size-[480px] rounded-full bg-royal/40 blur-[140px]" />
+      <section className="relative overflow-hidden bg-ink pb-16 pt-14 text-white md:pb-20 md:pt-20">
+        <div aria-hidden className="absolute -left-40 top-10 size-[480px] rounded-full glow text-royal/40 scale-150" />
         <div className="container-x relative">
           <Reveal><p className="eyebrow eyebrow-light">Legal</p></Reveal>
           <SplitText as="h1" animateOnMount lines={document.title} className="display mt-6 text-5xl md:text-7xl" />

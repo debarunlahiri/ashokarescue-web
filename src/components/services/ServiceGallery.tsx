@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Reveal } from "@/components/animations";
+import { setScrollLocked } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
 
 type ServiceGalleryProps = {
@@ -21,6 +22,13 @@ export default function ServiceGallery({ title, photos }: ServiceGalleryProps) {
     (direction: number) => setActiveIndex((i) => (i === null ? i : (i + direction + photos.length) % photos.length)),
     [photos.length],
   );
+
+  const isOpen = activeIndex !== null;
+  useEffect(() => {
+    if (!isOpen) return;
+    setScrollLocked(true);
+    return () => setScrollLocked(false);
+  }, [isOpen]);
 
   useEffect(() => {
     if (activeIndex === null) return;

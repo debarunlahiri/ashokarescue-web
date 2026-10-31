@@ -56,7 +56,7 @@ export default function HowItWorks() {
                 <span className="relative z-10 grid size-16 place-items-center rounded-full bg-ink text-sun ring-1 ring-white/20 transition-all duration-500 group-hover:bg-sun group-hover:text-ink group-hover:ring-sun">
                   <Icon className="size-6" />
                 </span>
-                <div className="mt-6 w-full rounded-3xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur-sm transition-colors duration-500 group-hover:border-white/25 group-hover:bg-white/[0.08]">
+                <div className="mt-6 w-full rounded-3xl border border-white/10 bg-white/[0.04] p-7 transition-colors duration-500 group-hover:border-white/25 group-hover:bg-white/[0.08]">
                   <p className="text-sm font-bold tracking-[0.2em] text-sky">STEP {padNumber(i + 1)}</p>
                   <h3 className="mt-3 text-xl font-bold tracking-tight">{step.title}</h3>
                   <p className="mt-3 text-[0.95rem] leading-relaxed text-white/65">{step.text}</p>

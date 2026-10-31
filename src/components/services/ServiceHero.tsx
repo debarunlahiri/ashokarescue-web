@@ -10,7 +10,7 @@ export default function ServiceHero({ service }: { service: Service }) {
   const Icon = serviceIcons[service.icon];
 
   return (
-    <section className="grain relative flex min-h-[78vh] items-end overflow-hidden bg-ink pb-16 pt-40 text-white md:pb-20">
+    <section className="grain relative flex min-h-[calc(78vh-var(--header-h))] items-end overflow-hidden bg-ink pb-16 pt-14 md:pt-20 text-white md:pb-20">
       <Image src={service.image.src} alt={service.image.alt} fill priority sizes="100vw" className="object-cover opacity-60" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
       <div className="absolute inset-0 bg-gradient-to-r from-ink/80 to-transparent" />
