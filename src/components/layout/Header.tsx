@@ -84,7 +84,7 @@ export default function Header() {
 
         <div className="container-x">
           <div className="relative flex h-20 items-center justify-between md:h-24">
-            <Logo className="[&_img]:size-14 md:[&_img]:size-[4.5rem]" />
+            <Logo withName className="min-w-0 shrink-0 gap-2.5 md:gap-3 [&_img]:size-14 md:[&_img]:size-[4.5rem]" />
 
             <nav className="hidden items-center gap-1 self-stretch lg:flex" onMouseLeave={() => setIsMegaOpen(false)}
               onBlur={(e) => {
@@ -95,7 +95,7 @@ export default function Header() {
                 const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const isServices = item.href === "/services";
                 const className = cn(
-                  "relative flex items-center gap-1 rounded-full px-4 py-2 text-[0.88rem] font-semibold transition-colors",
+                  "relative flex items-center gap-1 rounded-full px-3 py-2 text-[0.88rem] font-semibold transition-colors xl:px-4",
                   isActive ? "text-white" : "text-white/70 hover:text-white",
                 );
                 const content = (

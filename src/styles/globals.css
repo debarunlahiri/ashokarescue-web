@@ -275,3 +275,68 @@ html.lenis body {
 .route-pulse {
   animation: route-travel 4.5s ease-in-out infinite;
 }
+
+/* Footer transport scene (air, rail, road). Paused until on screen via .is-live. */
+@keyframes transport-travel {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+@keyframes transport-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes transport-siren {
+  0%,
+  49% {
+    opacity: 0.9;
+  }
+  50%,
+  100% {
+    opacity: 0.2;
+  }
+}
+.transport-move {
+  animation: transport-travel 24s linear infinite;
+  will-change: transform;
+}
+.transport-bob {
+  animation: transport-bob 4s ease-in-out infinite;
+}
+.transport-siren {
+  animation: transport-siren 0.9s linear infinite;
+}
+@keyframes transport-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.08;
+  }
+}
+.transport-twinkle {
+  animation: transport-twinkle 5s ease-in-out infinite;
+}
+.transport-scene:not(.is-live) * {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .transport-scene .transport-move {
+    animation: none !important;
+    transform: translateX(var(--rest-x, 20vw));
+  }
+  .transport-scene .transport-bob,
+  .transport-scene .transport-siren,
+  .transport-scene .transport-twinkle {
+    animation: none !important;
+  }
+}

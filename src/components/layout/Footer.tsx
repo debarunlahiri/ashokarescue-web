@@ -3,6 +3,7 @@ import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { SocialIcon, type SocialNetwork } from "@/components/icons";
 import { Logo } from "@/components/ui";
 import { services, site } from "@/data";
+import FooterTransport from "./FooterTransport";
 
 const companyLinks = [
   { label: "About us", href: "/about" },
@@ -41,7 +42,7 @@ export default function Footer() {
 
       <div className="container-x relative grid gap-12 py-16 md:grid-cols-12">
         <div className="md:col-span-4">
-          <Logo />
+          <Logo withName className="gap-4" nameClassName="text-2xl xl:text-3xl" />
           <p className="mt-5 max-w-sm leading-relaxed text-white/60">{site.tagline}</p>
           <div className="mt-6 flex gap-2">
             {socialNetworks.map((network) => (
@@ -91,16 +92,14 @@ export default function Footer() {
       </div>
 
       <div className="container-x relative flex flex-col gap-3 border-t border-white/10 py-6 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} {site.legalName}. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} {site.legalName.replace(/\.$/, "")}. All rights reserved.</p>
         <div className="flex gap-6">
           <Link href="/privacy" className="hover:text-white">Privacy policy</Link>
           <Link href="/terms" className="hover:text-white">Terms and conditions</Link>
         </div>
       </div>
 
-      <p aria-hidden className="pointer-events-none select-none whitespace-nowrap text-center text-[15vw] font-extrabold leading-[0.8] tracking-tighter text-white/[0.035]">
-        Ashoka Rescue
-      </p>
+      <FooterTransport />
     </footer>
   );
 }

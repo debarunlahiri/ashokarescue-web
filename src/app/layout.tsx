@@ -51,7 +51,7 @@ export const viewport: Viewport = { themeColor: "#071330", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script id="gtm-datalayer" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
@@ -60,7 +60,7 @@ gtag('js', new Date());`}
         </Script>
         <Script src="https://www.googletagmanager.com/gtm.js?id=GTM-KT9XDPRN" strategy="afterInteractive" />
       </head>
-      <body className="overflow-x-hidden">
+      <body className="overflow-x-hidden" suppressHydrationWarning>
         <JsonLd data={[organizationSchema, websiteSchema]} />
         <SmoothScroll />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-sun focus:px-4 focus:py-2">
