@@ -5,17 +5,14 @@ import { cn } from "@/lib/utils";
 
 type LogoProps = {
   className?: string;
-  /** Show the tagline next to the badge. */
-  withWordmark?: boolean;
-  /** Show "Ashoka Rescue" beside the badge (sizes itself for every breakpoint). */
-  withName?: boolean;
-  /** Size classes for the name text; replaces the default header sizing (e.g. larger in the footer). */
-  nameClassName?: string;
+  /** "light" is for dark backgrounds (footer). */
+  tone?: "dark" | "light";
 };
 
-export default function Logo({ className, withWordmark = false, withName = false, nameClassName }: LogoProps) {
+export default function Logo({ className, tone = "dark" }: LogoProps) {
+  const isLight = tone === "light";
   return (
-    <Link href="/" className={cn("flex items-center gap-3 text-white", className)} aria-label="Ashoka Rescue — home">
+    <Link href="/" className={cn("flex items-center gap-3", className)} aria-label="Ashoka Rescue — home">
       <Image
         src={images.brand.logo.src}
         alt={images.brand.logo.alt}
@@ -23,19 +20,16 @@ export default function Logo({ className, withWordmark = false, withName = false
         height={160}
         priority
         unoptimized
-        className="size-16 shrink-0 rounded-2xl bg-white object-contain p-1 shadow-lg ring-1 ring-white/30 md:size-20"
+        className={cn("size-12 shrink-0 object-contain md:size-16", isLight && "rounded bg-white p-1")}
       />
-      {withName && (
-        <span className="min-w-0 leading-tight">
-          <span className={cn("block whitespace-nowrap font-extrabold tracking-tight", nameClassName ?? "text-base sm:text-lg xl:text-xl")}>Ashoka Rescue</span>
+      <span className="leading-none">
+        <span className={cn("block font-display text-[1.35rem] font-extrabold uppercase tracking-tight md:text-[1.7rem]", isLight ? "text-white" : "text-navy")}>
+          Ashoka Rescue
         </span>
-      )}
-      {withWordmark && (
-        <span className="hidden leading-tight sm:block">
-          <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-sky/90">Air Ambulance</span>
-          <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-sky/90">Services</span>
+        <span className={cn("mt-1 block text-[0.6rem] font-medium uppercase tracking-[0.3em] md:text-[0.68rem]", isLight ? "text-white/70" : "text-navy/70")}>
+          Air Ambulance Services
         </span>
-      )}
+      </span>
     </Link>
   );
 }

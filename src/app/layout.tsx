@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/styles/globals.css";
-import { FloatingActions, Footer, Header, SmoothScroll } from "@/components/layout";
+import { FloatingActions, Footer, Header } from "@/components/layout";
 import { JsonLd } from "@/components/seo";
 import { seoDefaults, site, siteKeywords } from "@/data";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: site.meta.title, description: site.meta.description, images: [seoDefaults.shareImage.src] },
 };
 
-export const viewport: Viewport = { themeColor: "#071330", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#10207a", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -62,12 +62,11 @@ gtag('js', new Date());`}
       </head>
       <body className="overflow-x-hidden" suppressHydrationWarning>
         <JsonLd data={[organizationSchema, websiteSchema]} />
-        <SmoothScroll />
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-sun focus:px-4 focus:py-2">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-brand focus:px-4 focus:py-2 focus:text-white">
           Skip to content
         </a>
         <Header />
-        <main id="main" className="pt-[var(--header-h)]">{children}</main>
+        <main id="main">{children}</main>
         <Footer />
         <FloatingActions />
       </body>

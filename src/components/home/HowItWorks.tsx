@@ -1,74 +1,56 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll } from "framer-motion";
-import { Headset, ClipboardCheck, Route, HeartHandshake } from "lucide-react";
-import { useRef } from "react";
+import { Phone } from "lucide-react";
 import { Reveal } from "@/components/animations";
 import { SectionHeading } from "@/components/common";
-import { home, images } from "@/data";
-import { EASE_OUT_EXPO } from "@/lib/constants";
+import { home, images, site } from "@/data";
 import { padNumber } from "@/lib/utils";
 
-const stepIcons = [Headset, ClipboardCheck, Route, HeartHandshake];
-
+/** Four steps as a vertical timeline beside a photo. */
 export default function HowItWorks() {
   const { eyebrow, title, steps } = home.howItWorks;
-  const listRef = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 80%", "end 70%"] });
+  const photo = images.roadAmbulance.teamOnboard;
 
   return (
-    <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-      <Image
-        src={images.roadAmbulance.teamOnboard.src}
-        alt=""
-        aria-hidden
-        fill
-        sizes="100vw"
-        className="object-cover opacity-[0.12] mix-blend-luminosity"
-      />
-      <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-ink via-ink/80 to-ink" />
+    <section className="section bg-mist">
+      <div className="container-x grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:sticky lg:top-28 lg:col-span-5">
+          <SectionHeading eyebrow={eyebrow} title={title} />
 
-      <div className="container-x relative">
-        <SectionHeading eyebrow={eyebrow} title={title} centered light />
+          <Reveal delay={0.1} className="relative ml-4 mt-10 md:ml-6">
+            <span aria-hidden className="absolute -bottom-4 -left-4 h-full w-full rounded bg-brand md:-bottom-5 md:-left-5" />
+            <div className="relative aspect-[4/3] overflow-hidden rounded bg-navy">
+              <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+            </div>
+            <div className="absolute -bottom-6 right-4 flex items-center gap-3 bg-navy px-5 py-4 text-white shadow-xl md:-right-6">
+              <span className="grid size-10 place-items-center rounded-full bg-brand"><Phone className="size-4" /></span>
+              <a href={site.phones.emergency.href} className="font-display text-lg font-semibold text-white hover:text-brand">{site.phones.emergency.label}</a>
+            </div>
+          </Reveal>
+        </div>
 
-        <ol ref={listRef} className="relative mt-16 grid gap-6 md:mt-20 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          {/* connecting line (desktop) */}
-          <span aria-hidden className="absolute left-[12.5%] right-[12.5%] top-8 hidden h-px bg-white/15 lg:block" />
-          <motion.span
-            aria-hidden
-            style={{ scaleX: scrollYProgress }}
-            className="absolute left-[12.5%] right-[12.5%] top-8 hidden h-px origin-left bg-gradient-to-r from-sun to-sky lg:block"
-          />
+        <div className="lg:col-span-7">
+          <ol className="relative grid gap-6">
+            <span aria-hidden className="absolute bottom-10 left-[1.65rem] top-10 w-0.5 bg-brand/30" />
+            {steps.map((step, i) => (
+              <Reveal key={step.title} delay={i * 0.08}>
+                <li className="relative flex gap-5">
+                  <span className="relative z-10 grid size-[3.4rem] shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-navy shadow-[0_10px_24px_-10px_rgba(76,195,240,0.9)] ring-8 ring-mist">
+                    {padNumber(i + 1)}
+                  </span>
+                  <div className="card flex-1 border-l-4 border-brand p-6 transition-transform duration-300 hover:translate-x-1">
+                    <h3 className="font-display text-xl font-semibold">{step.title}</h3>
+                    <p className="mt-2 leading-relaxed text-slate">{step.text}</p>
+                  </div>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
 
-          {steps.map((step, i) => {
-            const Icon = stepIcons[i % stepIcons.length];
-            return (
-              <motion.li
-                key={step.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.9, delay: i * 0.12, ease: EASE_OUT_EXPO }}
-                className="group relative flex flex-col items-center text-center"
-              >
-                <span className="relative z-10 grid size-16 place-items-center rounded-full bg-ink text-sun ring-1 ring-white/20 transition-all duration-500 group-hover:bg-sun group-hover:text-ink group-hover:ring-sun">
-                  <Icon className="size-6" />
-                </span>
-                <div className="mt-6 w-full rounded-3xl border border-white/10 bg-white/[0.04] p-7 transition-colors duration-500 group-hover:border-white/25 group-hover:bg-white/[0.08]">
-                  <p className="text-sm font-bold tracking-[0.2em] text-sky">STEP {padNumber(i + 1)}</p>
-                  <h3 className="mt-3 text-xl font-bold tracking-tight">{step.title}</h3>
-                  <p className="mt-3 text-[0.95rem] leading-relaxed text-white/65">{step.text}</p>
-                </div>
-              </motion.li>
-            );
-          })}
-        </ol>
-
-        <Reveal delay={0.2} className="mt-14 text-center">
-          <Link href="/contact#assistance" className="btn btn-primary">Start with a call</Link>
-        </Reveal>
+          <Reveal delay={0.2} className="mt-10 pl-[4.4rem]">
+            <Link href="/contact#assistance" className="btn btn-dark">Start with a call</Link>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

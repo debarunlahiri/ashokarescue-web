@@ -33,7 +33,7 @@ export default function Counter({ to, suffix = "", className }: CounterProps) {
   return (
     <span ref={ref} className={className}>
       <span ref={numberRef}>0</span>
-      <span className="text-sun">{suffix}</span>
+      <span className="text-brand-600">{suffix}</span>
     </span>
   );
 }

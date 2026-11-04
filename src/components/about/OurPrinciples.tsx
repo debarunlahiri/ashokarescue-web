@@ -7,21 +7,18 @@ export default function OurPrinciples() {
   const { eyebrow, title, text, items } = about.principles;
 
   return (
-    <section className="container-x py-24 md:py-32">
-      <SectionHeading eyebrow={eyebrow} title={title} description={text} />
-      <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {items.map((item, i) => (
-          <Reveal key={item.title} delay={i * 0.08} className="card group relative overflow-hidden p-7 transition-transform duration-500 hover:-translate-y-2">
-            <span aria-hidden className="absolute -right-3 -top-5 text-[6.5rem] font-extrabold leading-none text-mist transition-colors duration-500 group-hover:text-sun/20">
-              {padNumber(i + 1)}
-            </span>
-            <div className="relative">
-              <span className="text-sm font-bold text-royal">{padNumber(i + 1)}</span>
-              <h3 className="mt-14 text-xl font-bold tracking-tight">{item.title}</h3>
+    <section className="section">
+      <div className="container-x">
+        <SectionHeading centered eyebrow={eyebrow} title={title} description={text} />
+        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {items.map((item, i) => (
+            <Reveal key={item.title} delay={i * 0.07} className="card group border-b-4 border-navy p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand">
+              <span className="grid size-14 place-items-center rounded-full bg-brand-50 font-display text-xl font-bold text-brand-600 transition-colors group-hover:bg-brand group-hover:text-navy">{padNumber(i + 1)}</span>
+              <h3 className="mt-6 font-display text-xl font-semibold">{item.title}</h3>
               <p className="mt-3 leading-relaxed text-slate">{item.text}</p>
-            </div>
-          </Reveal>
-        ))}
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

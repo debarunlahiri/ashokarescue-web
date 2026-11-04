@@ -8,7 +8,7 @@ type FormFieldProps = {
 export default function FormField({ label, children }: FormFieldProps) {
   return (
     <label className="grid gap-1.5">
-      <span className="text-sm font-semibold text-ink">{label}</span>
+      <span className="text-sm font-medium text-navy">{label}</span>
       {children}
     </label>
   );

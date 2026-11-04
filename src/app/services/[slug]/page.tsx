@@ -51,7 +51,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
         ]}
       />
       <ServiceHero service={service} />
-      <section className="container-x grid gap-14 py-20 md:py-28 lg:grid-cols-12">
+      <section className="container-x grid gap-14 py-16 md:py-24 lg:grid-cols-12">
         <article className="lg:col-span-8">
           <ServiceContent content={service.content} />
         </article>

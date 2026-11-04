@@ -15,9 +15,11 @@ export default function ServicesPage() {
     <>
       <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Services", path: "/services" }])} />
       <PageHero eyebrow={hero.eyebrow} title={hero.title} description={hero.text} caption={hero.caption} image={images.hero.tarmacTransfer} />
-      <section className="container-x py-24 md:py-32">
-        <SectionHeading eyebrow={explore.eyebrow} title={explore.title} description={explore.text} />
-        <ServicesGrid />
+      <section className="section">
+        <div className="container-x">
+          <SectionHeading eyebrow={explore.eyebrow} title={explore.title} description={explore.text} />
+          <ServicesGrid />
+        </div>
       </section>
       <ServiceGuide />
       <CtaBanner eyebrow={cta.eyebrow} title={cta.title} description={cta.text} image={images.hero.cabinCare} />

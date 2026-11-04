@@ -1,36 +1,35 @@
-@import "@fontsource-variable/roboto/wght.css";
+@import "@fontsource-variable/exo-2/wght.css";
+@import "@fontsource-variable/rubik/wght.css";
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Roboto Variable", "Roboto", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Roboto Variable", "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Exo 2 Variable", "Exo 2", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Rubik Variable", "Rubik", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #071330;
-  --color-navy: #0c2160;
-  --color-royal: #1b4fc4;
-  --color-sky: #8cc0f7;
-  --color-mist: #eaf2fc;
-  --color-paper: #f7f9fc;
-  --color-sun: #f4a24c;
-  --color-flare: #ffd29a;
-  --color-signal: #d93a35;
-  --color-slate: #51607d;
-
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Primary deep blue #10207A with a soft sky-blue accent. */
+  --color-brand: #4cc3f0;
+  --color-brand-600: #0e7fb8;
+  --color-brand-700: #0a5f8c;
+  --color-brand-50: #e7f6fd;
+  --color-navy: #10207a;
+  --color-navy-800: #0b1760;
+  --color-navy-900: #070f45;
+  --color-ink: #0f1a4a;
+  --color-mist: #f2f4fb;
+  --color-paper: #ffffff;
+  --color-slate: #55607f;
+  --color-line: #e1e5f3;
+  --color-signal: #e5484d;
 }
 
 @layer base {
-  /* Height of the fixed header: main bar (h-20 / md:h-24) + md top bar (h-9) */
   :root {
-    --header-h: 5rem;
-  }
-  @media (min-width: 768px) {
-    :root {
-      --header-h: 8.25rem;
-    }
+    --nav-h: 4.5rem;
+    --header-h: 4.5rem;
   }
   html {
-    scroll-padding-top: var(--header-h);
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -39,183 +38,151 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-navy);
+  }
   ::selection {
-    background: var(--color-sun);
-    color: var(--color-ink);
+    background: var(--color-brand);
+    color: var(--color-navy);
   }
   :focus-visible {
-    outline: 2px solid var(--color-sun);
+    outline: 2px solid var(--color-brand);
     outline-offset: 3px;
     border-radius: 4px;
   }
 }
 
-/* Lenis */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
 @layer components {
   .container-x {
     width: 100%;
-    max-width: 1320px;
+    max-width: 1240px;
     margin-inline: auto;
     padding-inline: 1.25rem;
   }
   @media (min-width: 768px) {
     .container-x {
-      padding-inline: 2.5rem;
+      padding-inline: 2rem;
     }
   }
 
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-royal);
+  .section {
+    padding-block: 4.5rem;
   }
-  .eyebrow::before {
-    content: "";
-    width: 28px;
-    height: 2px;
-    background: var(--color-signal);
-    border-radius: 2px;
-  }
-  .eyebrow-light {
-    color: var(--color-flare);
+  @media (min-width: 768px) {
+    .section {
+      padding-block: 6rem;
+    }
   }
 
-  .display {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.04;
+  /* Pulls a page's first section up behind the floating desktop nav card. */
+  @media (min-width: 1024px) {
+    .under-nav {
+      margin-top: calc(var(--nav-h) / -2);
+    }
   }
 
   .btn {
-    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    justify-content: center;
+    gap: 0.55rem;
     border-radius: 999px;
-    padding: 0.95rem 1.5rem;
-    font-weight: 700;
-    font-size: 0.92rem;
-    transition: transform 0.4s var(--ease-out-expo), background 0.3s, color 0.3s, box-shadow 0.4s;
-    overflow: hidden;
-    isolation: isolate;
+    padding: 0.8rem 1.6rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   }
   .btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
-  .btn-primary {
-    background: var(--color-sun);
-    color: var(--color-ink);
-    box-shadow: 0 10px 30px -10px rgb(244 162 76 / 0.7);
+  .btn-brand {
+    background: var(--color-brand);
+    color: var(--color-navy);
+    font-weight: 600;
   }
-  .btn-primary::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(120deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
-    transform: translateX(-120%);
-    transition: transform 0.8s var(--ease-out-expo);
-  }
-  .btn-primary:hover::after {
-    transform: translateX(120%);
+  .btn-brand:hover {
+    background: #7ad3f5;
+    box-shadow: 0 10px 24px -12px rgb(76 195 240 / 0.9);
   }
   .btn-dark {
-    background: var(--color-ink);
+    background: var(--color-navy);
     color: white;
   }
   .btn-dark:hover {
-    background: var(--color-navy);
-    box-shadow: 0 16px 40px -14px rgb(7 19 48 / 0.6);
+    background: var(--color-navy-900);
+    box-shadow: 0 10px 24px -12px rgb(16 32 122 / 0.7);
   }
-  .btn-ghost {
-    border: 1px solid rgb(255 255 255 / 0.35);
-    color: white;
-    backdrop-filter: blur(10px);
-    background: rgb(255 255 255 / 0.06);
+  .btn-light {
+    background: white;
+    color: var(--color-navy);
   }
-  .btn-ghost:hover {
-    background: rgb(255 255 255 / 0.16);
+  .btn-light:hover {
+    background: var(--color-brand-50);
   }
   .btn-outline {
-    border: 1px solid rgb(7 19 48 / 0.15);
-    color: var(--color-ink);
+    border: 1px solid var(--color-navy);
+    color: var(--color-navy);
   }
   .btn-outline:hover {
-    border-color: var(--color-ink);
+    background: var(--color-navy);
+    color: white;
   }
-
-  .glass {
-    background: rgb(255 255 255 / 0.08);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    border: 1px solid rgb(255 255 255 / 0.16);
+  .btn-outline-light {
+    border: 1px solid rgb(255 255 255 / 0.6);
+    color: white;
   }
-
-  /* Browsers or builds without backdrop-filter get a solid dark panel instead of a see-through one. */
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .glass {
-      background: rgb(7 19 48 / 0.78);
-    }
+  .btn-outline-light:hover {
+    background: white;
+    color: var(--color-navy);
   }
 
   .card {
     background: white;
-    border: 1px solid rgb(12 33 96 / 0.08);
-    border-radius: 1.5rem;
-    box-shadow: 0 1px 0 rgb(12 33 96 / 0.03), 0 20px 50px -30px rgb(12 33 96 / 0.25);
+    border-radius: 4px;
+    box-shadow: 0 10px 40px -18px rgb(16 32 122 / 0.22);
   }
 
   .field {
     width: 100%;
-    border-radius: 0.9rem;
-    border: 1px solid rgb(12 33 96 / 0.12);
-    background: var(--color-paper);
-    padding: 0.85rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-line);
+    background: white;
+    padding: 0.8rem 1rem;
     font-size: 0.95rem;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    color: var(--color-ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field::placeholder {
+    color: #8794a1;
   }
   .field:focus {
     outline: none;
-    background: white;
-    border-color: var(--color-royal);
-    box-shadow: 0 0 0 4px rgb(27 79 196 / 0.12);
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgb(76 195 240 / 0.15);
+  }
+
+  /* Solid saw-tooth edge in the current text colour: <span class="zigzag text-navy" />. */
+  .zigzag {
+    display: block;
+    height: 12px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='black'/%3E%3C/svg%3E") repeat-x left bottom / 24px 12px;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='black'/%3E%3C/svg%3E") repeat-x left bottom / 24px 12px;
+    transition: color 0.3s;
   }
 
   .prose-ar p {
     color: var(--color-slate);
     line-height: 1.8;
-    font-size: 1.04rem;
+    font-size: 1.02rem;
   }
-}
-
-/* Soft colour glow: a radial gradient instead of filter: blur() — same look, far cheaper to paint. Colour via text-* utilities. */
-.glow {
-  background: radial-gradient(closest-side, currentColor, transparent);
-  pointer-events: none;
-}
-
-.grain::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @keyframes marquee {
@@ -224,7 +191,7 @@ html.lenis body {
   }
 }
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 60s linear infinite;
   will-change: transform;
 }
 
@@ -239,22 +206,21 @@ html.lenis body {
   }
 }
 .ping-soft {
-  animation: ping-soft 2.2s var(--ease-out-expo) infinite;
+  animation: ping-soft 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.dash-flow {
+  animation: dash-flow 1.6s linear infinite;
 }
 
 @keyframes ecg {
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }
 
@@ -276,128 +242,15 @@ html.lenis body {
   animation: route-travel 4.5s ease-in-out infinite;
 }
 
-/* Footer transport scene (air, rail, road). Paused until on screen via .is-live. */
-@keyframes transport-travel {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100vw);
-  }
-}
-@keyframes transport-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-@keyframes transport-siren {
-  0%,
-  49% {
-    opacity: 0.9;
-  }
-  50%,
-  100% {
-    opacity: 0.2;
-  }
-}
-.transport-move {
-  animation: transport-travel 24s linear infinite;
-  will-change: transform;
-}
-.transport-bob {
-  animation: transport-bob 4s ease-in-out infinite;
-}
-.transport-siren {
-  animation: transport-siren 0.9s linear infinite;
-}
-@keyframes transport-twinkle {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.08;
-  }
-}
-.transport-twinkle {
-  animation: transport-twinkle 5s ease-in-out infinite;
-}
-.transport-scene:not(.is-live) * {
-  animation-play-state: paused;
-}
 @media (prefers-reduced-motion: reduce) {
-  .transport-scene .transport-move {
-    animation: none !important;
-    transform: translateX(var(--rest-x, 20vw));
+  html {
+    scroll-behavior: auto;
   }
-  .transport-scene .transport-bob,
-  .transport-scene .transport-siren,
-  .transport-scene .transport-twinkle {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-}
-
-/* Journey scene: day/night colour tokens (SVG fills read these), cross-faded on toggle. */
-.journey-scene {
-  --s-ground: rgb(12 33 96 / 0.035);
-  --s-line: rgb(12 33 96 / 0.1);
-  --s-guide: rgb(12 33 96 / 0.16);
-  --s-building: rgb(12 33 96 / 0.1);
-  --s-tower: rgb(12 33 96 / 0.12);
-  --s-tower-top: rgb(12 33 96 / 0.17);
-  --s-runway: rgb(12 33 96 / 0.07);
-  --s-window: rgb(255 255 255 / 0.75);
-  --s-entrance: rgb(12 33 96 / 0.22);
-  --s-label: var(--color-slate);
-  --s-stretcher: rgb(12 33 96 / 0.5);
-}
-.journey-scene.is-night {
-  --s-ground: rgb(255 255 255 / 0.04);
-  --s-line: rgb(255 255 255 / 0.16);
-  --s-guide: rgb(255 255 255 / 0.22);
-  --s-building: rgb(255 255 255 / 0.09);
-  --s-tower: rgb(255 255 255 / 0.11);
-  --s-tower-top: rgb(255 255 255 / 0.16);
-  --s-runway: rgb(255 255 255 / 0.07);
-  --s-window: rgb(255 210 154 / 0.9);
-  --s-entrance: rgb(255 210 154 / 0.4);
-  --s-label: rgb(255 255 255 / 0.75);
-  --s-stretcher: rgb(255 255 255 / 0.6);
-}
-.journey-scene svg rect,
-.journey-scene svg path,
-.journey-scene svg line,
-.journey-scene svg text {
-  transition: fill 1.2s ease, stroke 1.2s ease;
-}
-.journey-scene .night-only {
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-.journey-scene.is-night .night-only {
-  opacity: 1;
-}
-.journey-scene .sun-disc,
-.journey-scene .moon-disc,
-.journey-scene .journey-cloud {
-  transition: opacity 1.4s ease, transform 1.4s ease;
-}
-.journey-scene .moon-disc {
-  opacity: 0;
-  transform: translateY(40px);
-}
-.journey-scene.is-night .sun-disc {
-  opacity: 0;
-  transform: translateY(40px);
-}
-.journey-scene.is-night .moon-disc {
-  opacity: 1;
-  transform: none;
-}
-.journey-scene.is-night .journey-cloud {
-  opacity: 0.35;
 }

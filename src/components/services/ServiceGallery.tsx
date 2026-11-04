@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Reveal } from "@/components/animations";
-import { setScrollLocked } from "@/lib/lenis";
+import { SectionHeading } from "@/components/common";
+import { setScrollLocked } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 type ServiceGalleryProps = {
@@ -42,11 +43,8 @@ export default function ServiceGallery({ title, photos }: ServiceGalleryProps) {
   }, [activeIndex, close, step]);
 
   return (
-    <section className="container-x pb-24 md:pb-32">
-      <Reveal>
-        <p className="eyebrow">From our missions</p>
-        <h2 className="display mt-5 text-3xl md:text-5xl">{title}</h2>
-      </Reveal>
+    <section className="container-x pb-20 md:pb-28">
+      <SectionHeading eyebrow="From our missions" title={title} />
 
       <div className="mt-12 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4">
         {photos.map((src, i) => (
@@ -54,7 +52,7 @@ export default function ServiceGallery({ title, photos }: ServiceGalleryProps) {
             <button
               type="button"
               onClick={() => setActiveIndex(i)}
-              className={cn("group relative block w-full overflow-hidden rounded-2xl bg-mist", i % 3 === 0 ? "aspect-[3/4]" : i % 3 === 1 ? "aspect-square" : "aspect-[4/5]")}
+              className={cn("group relative block w-full overflow-hidden rounded bg-mist", i % 3 === 0 ? "aspect-[3/4]" : i % 3 === 1 ? "aspect-square" : "aspect-[4/5]")}
               aria-label={`Open photo ${i + 1} of ${photos.length}`}
             >
               <Image src={src} alt="" fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -69,7 +67,7 @@ export default function ServiceGallery({ title, photos }: ServiceGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/95 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-navy-900/95 p-4 backdrop-blur-md"
             onClick={close}
             role="dialog"
             aria-modal="true"

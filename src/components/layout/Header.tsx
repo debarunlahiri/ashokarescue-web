@@ -2,28 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { ArrowUpRight, ChevronDown, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { ArrowUpRight, ChevronDown, Mail, MapPin, Menu, Phone, X, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { SocialIcon } from "@/components/icons";
 import { Logo } from "@/components/ui";
 import { navigation, site } from "@/data";
-import { setScrollLocked } from "@/lib/lenis";
+import { setScrollLocked } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
 import MobileMenu from "./MobileMenu";
 
+function InfoItem({ icon: Icon, label, value, href, external }: { icon: LucideIcon; label: string; value: string; href: string; external?: boolean }) {
+  return (
+    <a href={href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})} className="group flex items-start gap-2.5">
+      <Icon className="mt-1 size-4 shrink-0 text-navy transition-colors group-hover:text-brand" />
+      <span>
+        <span className="block text-sm text-slate">{label}</span>
+        <span className="block font-display text-[1.05rem] font-semibold leading-snug text-navy transition-colors group-hover:text-brand-600">{value}</span>
+      </span>
+    </a>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
-  const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMegaOpen, setIsMegaOpen] = useState(false);
 
-  useMotionValueEvent(scrollY, "change", (y) => setIsScrolled(y > 20));
-
   useEffect(() => {
-    setIsScrolled(window.scrollY > 20);
+    const onScroll = () => setIsScrolled(window.scrollY > 140);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -45,108 +56,85 @@ export default function Header() {
 
   return (
     <>
-      <header
+      {/* Logo + contact details. Sticks on mobile (where it carries the menu button); scrolls away on desktop. */}
+      <div className="z-50 border-b border-line bg-white max-lg:sticky max-lg:top-0 lg:border-0">
+        <div className="container-x flex h-16 items-center justify-between lg:h-[8.25rem]">
+          <Logo />
+
+          <div className="hidden items-start gap-10 lg:flex xl:gap-16">
+            <InfoItem icon={Phone} label="Emergency 24/7" value={site.phones.emergency.label} href={site.phones.emergency.href} />
+            <InfoItem icon={Mail} label="Email Address" value={site.email} href={`mailto:${site.email}`} />
+            <InfoItem icon={MapPin} label="Location" value="Gurugram, Haryana" href={site.address.mapUrl} external />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            className="grid size-11 place-items-center rounded bg-brand text-navy lg:hidden"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Floating nav card; becomes a full-width white bar once scrolled. */}
+      <div
         className={cn(
-          "fixed inset-x-0 top-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
-          isScrolled && !isMenuOpen
-            ? "border-white/10 bg-ink/80 shadow-[0_12px_40px_-16px_rgba(7,19,48,0.55)] backdrop-blur-lg backdrop-saturate-150 supports-[not(backdrop-filter:blur(1px))]:bg-ink"
-            : "border-transparent bg-ink",
+          "sticky top-0 z-50 hidden transition-[background,box-shadow] duration-300 lg:block",
+          isScrolled ? "bg-white shadow-[0_8px_30px_-14px_rgba(16,32,122,0.35)]" : "bg-[linear-gradient(to_bottom,#fff_50%,transparent_50%)]",
         )}
       >
-        <div
-          aria-hidden={isScrolled}
-          className={cn(
-            "hidden overflow-hidden border-b transition-[height,opacity,border-color] duration-500 md:block",
-            isScrolled ? "pointer-events-none h-0 border-transparent opacity-0" : "h-9 border-white/10 opacity-100",
-          )}
-        >
-          <div className="container-x flex h-9 items-center justify-between text-[0.78rem] text-white/80">
-            <div className="flex items-center divide-x divide-white/15">
-              <a href={site.phones.emergency.href} className="flex items-center gap-2 pr-4 transition-colors hover:text-white">
-                <Phone className="size-3.5 text-sun" /> {site.phones.emergency.label}
-              </a>
-              <a href={`mailto:${site.email}`} className="flex items-center gap-2 px-4 transition-colors hover:text-white">
-                <Mail className="size-3.5 text-sun" /> {site.email}
-              </a>
-              <a href={site.address.mapUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 pl-4 transition-colors hover:text-white">
-                <MapPin className="size-3.5 text-sun" /> Gurugram, Haryana
-              </a>
-            </div>
-            <div className="flex items-center gap-4">
-              {(Object.keys(site.social) as (keyof typeof site.social)[]).map((name) => (
-                <a key={name} href={site.social[name]} target="_blank" rel="noreferrer" aria-label={name} className="transition-colors hover:text-white">
-                  <SocialIcon name={name} className="size-3.5" />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="container-x">
-          <div className="relative flex h-20 items-center justify-between md:h-24">
-            <Logo withName className="min-w-0 shrink-0 gap-2.5 md:gap-3 [&_img]:size-14 md:[&_img]:size-[4.5rem]" />
-
-            <nav className="hidden items-center gap-1 self-stretch lg:flex" onMouseLeave={() => setIsMegaOpen(false)}
-              onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
-              }}
-            >
+          <nav
+            aria-label="Main"
+            className={cn("relative flex h-[var(--nav-h)] items-center justify-between bg-white px-8 transition-shadow duration-300", !isScrolled && "shadow-[0_14px_40px_-16px_rgba(16,32,122,0.3)]")}
+            onMouseLeave={() => setIsMegaOpen(false)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
+            }}
+          >
+            <ul className="flex items-center gap-8 xl:gap-10">
               {navigation.map((item) => {
                 const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const isServices = item.href === "/services";
                 const className = cn(
-                  "relative flex items-center gap-1 rounded-full px-3 py-2 text-[0.88rem] font-semibold transition-colors xl:px-4",
-                  isActive ? "text-white" : "text-white/70 hover:text-white",
+                  "flex items-center gap-1 py-6 font-display text-[1.02rem] font-semibold transition-colors",
+                  isActive ? "text-brand-600" : "text-navy hover:text-brand-600",
                 );
-                const content = (
-                  <>
-                    {isActive && (
-                      <motion.span layoutId="nav-pill" className="absolute inset-0 -z-10 rounded-full bg-white/10" transition={{ type: "spring", stiffness: 380, damping: 32 }} />
+                return (
+                  <li key={item.href}>
+                    {item.external ? (
+                      <a href={item.href} target="_blank" rel="noreferrer" className={className} onMouseEnter={() => setIsMegaOpen(false)}>
+                        {item.label} <ArrowUpRight className="size-3.5" />
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={className}
+                        onMouseEnter={() => setIsMegaOpen(isServices)}
+                        onFocus={() => setIsMegaOpen(isServices)}
+                        aria-haspopup={isServices || undefined}
+                        aria-expanded={isServices ? isMegaOpen : undefined}
+                      >
+                        {item.label}
+                        {isServices && <ChevronDown className={cn("size-4 transition-transform", isMegaOpen && "rotate-180")} />}
+                      </Link>
                     )}
-                    {item.label}
-                    {isServices && <ChevronDown className={cn("size-3.5 transition-transform", isMegaOpen && "rotate-180")} />}
-                    {item.external && <ArrowUpRight className="size-3.5" />}
-                  </>
-                );
-
-                return item.external ? (
-                  <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className={className} onMouseEnter={() => setIsMegaOpen(false)}>
-                    {content}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={className}
-                    onMouseEnter={() => setIsMegaOpen(isServices)}
-                    onFocus={() => setIsMegaOpen(isServices)}
-                    aria-haspopup={isServices || undefined}
-                    aria-expanded={isServices ? isMegaOpen : undefined}
-                  >
-                    {content}
-                  </Link>
+                  </li>
                 );
               })}
-              <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
-            </nav>
+            </ul>
 
-            <div className="flex items-center gap-2">
-              <a href={site.phones.emergency.href} className="btn btn-primary hidden h-11 shrink-0 self-center !py-0 sm:inline-flex">
-                <Phone className="size-4" /> Call 24/7
-              </a>
-              <button
-                type="button"
-                onClick={() => setIsMenuOpen((open) => !open)}
-                className="grid size-12 place-items-center rounded-2xl bg-white/10 text-white lg:hidden"
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                aria-expanded={isMenuOpen}
-              >
-                {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-              </button>
-            </div>
-          </div>
+            <Link href="/contact#assistance" className="inline-flex h-11 items-center gap-2 rounded bg-brand px-6 font-display text-[0.95rem] font-semibold text-navy transition-colors hover:bg-[#7ad3f5]">
+              Request assistance
+            </Link>
+
+            <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
+          </nav>
         </div>
-      </header>
+      </div>
 
       <AnimatePresence>{isMenuOpen && <MobileMenu />}</AnimatePresence>
     </>

@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { AssistanceSection, ServiceMarquee } from "@/components/common";
+import { AssistanceSection } from "@/components/common";
 import { site } from "@/data";
 import { buildMetadata } from "@/lib/seo";
 import {
   ClosingCta,
-  FieldGallery,
   GlobalReach,
   HeroCarousel,
   HomeFaq,
   HowItWorks,
-  JourneyAnimation,
-  PatientFirst,
+  InfoCards,
+  Journey,
   ServicesShowcase,
+  WhyChooseUs,
 } from "@/components/home";
 
 export const metadata: Metadata = buildMetadata({ meta: site.meta, path: "/" });
@@ -20,13 +20,12 @@ export default function HomePage() {
   return (
     <>
       <HeroCarousel />
-      <ServiceMarquee />
+      <InfoCards />
+      <WhyChooseUs />
       <ServicesShowcase />
-      <JourneyAnimation />
-      <PatientFirst />
+      <Journey />
       <HowItWorks />
       <GlobalReach />
-      <FieldGallery />
       <HomeFaq />
       <AssistanceSection />
       <ClosingCta />

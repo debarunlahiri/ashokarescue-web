@@ -42,12 +42,12 @@ export default function WorldRouteMap() {
       >
         <defs>
           <linearGradient id="route-gradient" x1="0" x2="1">
-            <stop offset="0" stopColor="#f4a24c" />
-            <stop offset="1" stopColor="#8cc0f7" />
+            <stop offset="0" stopColor="#4cc3f0" />
+            <stop offset="1" stopColor="#b9e9fa" />
           </linearGradient>
           <radialGradient id="hub-glow">
-            <stop offset="0" stopColor="#f4a24c" stopOpacity="0.8" />
-            <stop offset="1" stopColor="#f4a24c" stopOpacity="0" />
+            <stop offset="0" stopColor="#4cc3f0" stopOpacity="0.8" />
+            <stop offset="1" stopColor="#4cc3f0" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -67,7 +67,7 @@ export default function WorldRouteMap() {
                 viewport={{ once: true }}
                 transition={{ duration: 1.8, delay: 0.3 + i * 0.15, ease: EASE_OUT_EXPO }}
               />
-              <circle r={0.55} fill="#ffd29a" className={isVisible ? "route-pulse" : "opacity-0"} style={{ offsetPath: `path("${d}")`, animationDelay: `${i * 0.55}s` }} />
+              <circle r={0.55} fill="#ffffff" className={isVisible ? "route-pulse" : "opacity-0"} style={{ offsetPath: `path("${d}")`, animationDelay: `${i * 0.55}s` }} />
               <motion.g
                 initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -75,8 +75,8 @@ export default function WorldRouteMap() {
                 transition={{ delay: 1.2 + i * 0.15 }}
                 style={{ transformOrigin: `${city.x}px ${city.y}px`, transformBox: "view-box" }}
               >
-                <circle cx={city.x} cy={city.y} r={1.6} fill="none" stroke="#8cc0f7" strokeOpacity={0.45} strokeWidth={0.2} />
-                <circle cx={city.x} cy={city.y} r={0.75} fill="#8cc0f7" />
+                <circle cx={city.x} cy={city.y} r={1.6} fill="none" stroke="#b9e9fa" strokeOpacity={0.45} strokeWidth={0.2} />
+                <circle cx={city.x} cy={city.y} r={0.75} fill="#b9e9fa" />
                 <text x={city.x + label.dx} y={city.y + label.dy} textAnchor={label.anchor} fontSize={2} fontWeight={600} fill="rgba(255,255,255,0.8)">
                   {city.name}
                 </text>
@@ -86,7 +86,7 @@ export default function WorldRouteMap() {
         })}
 
         <circle cx={hub.x} cy={hub.y} r={6} fill="url(#hub-glow)" className={isVisible ? "animate-pulse" : undefined} />
-        <circle cx={hub.x} cy={hub.y} r={1.1} fill="#f4a24c" stroke="#071330" strokeWidth={0.35} />
+        <circle cx={hub.x} cy={hub.y} r={1.1} fill="#4cc3f0" stroke="#10207a" strokeWidth={0.35} />
         <text x={hub.x + 2} y={hub.y - 1.8} fontSize={2.3} fontWeight={700} fill="#ffffff">{hub.name}</text>
       </svg>
     </div>

@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight, Phone } from "lucide-react";
-import { ClipReveal, Reveal, SplitText } from "@/components/animations";
+import { Reveal } from "@/components/animations";
+import { EcgLine } from "@/components/icons";
 import { site } from "@/data";
 import type { ImageAsset } from "@/types";
 
@@ -16,24 +17,31 @@ type PageHeroProps = {
   actions?: ReactNode;
 };
 
-/** Dark split hero used at the top of inner pages. */
+/** Light banner used at the top of inner pages; tucks under the floating nav on desktop. */
 export default function PageHero({ eyebrow, title, description, image, caption, actions }: PageHeroProps) {
   return (
-    <section className="grain relative overflow-hidden bg-ink pb-20 pt-14 text-white md:pb-28 md:pt-20">
-      <div aria-hidden className="absolute -left-40 top-20 size-[520px] rounded-full glow text-royal/40 scale-150" />
-      <div aria-hidden className="absolute -right-20 bottom-0 size-[380px] rounded-full glow text-sun/20 scale-150" />
+    <section className="under-nav relative overflow-hidden bg-mist pb-16 pt-12 md:pb-24 lg:pt-28">
+      <div aria-hidden className="absolute -right-24 -top-24 size-[420px] rounded-full bg-brand/10" />
+      <div aria-hidden className="absolute -bottom-32 left-1/3 size-[300px] rounded-full bg-brand/10" />
 
-      <div className="container-x relative grid items-center gap-14 lg:grid-cols-12">
+      <div className="container-x relative grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <Reveal><p className="eyebrow eyebrow-light">{eyebrow}</p></Reveal>
-          <SplitText as="h1" animateOnMount lines={title} accentClassName="text-flare" className="display mt-6 text-5xl sm:text-6xl xl:text-7xl" />
-          <Reveal delay={0.3}><p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75">{description}</p></Reveal>
-          <Reveal delay={0.4}>
-            <div className="mt-9 flex flex-wrap gap-3">
+          <Reveal offset={16}>
+            <EcgLine />
+            <p className="mt-3 text-base uppercase tracking-[0.14em] text-slate md:text-lg">{eyebrow}</p>
+          </Reveal>
+          <h1 className="mt-3 font-display text-[2.4rem] font-bold leading-[1.08] sm:text-5xl xl:text-[3.6rem]">
+            {title.map((line, i) => (
+              <span key={i} className={i === title.length - 1 && title.length > 1 ? "block text-brand-600" : "block"}>{line}</span>
+            ))}
+          </h1>
+          <Reveal delay={0.15} offset={16}>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate md:text-lg">{description}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
               {actions ?? (
                 <>
-                  <Link href="/contact#assistance" className="btn btn-primary">Plan a transfer <ArrowRight className="size-4" /></Link>
-                  <a href={site.phones.emergency.href} className="btn btn-ghost"><Phone className="size-4" /> {site.phones.emergency.label}</a>
+                  <Link href="/contact#assistance" className="btn btn-dark">Plan a transfer <ArrowRight className="size-4" /></Link>
+                  <a href={site.phones.emergency.href} className="btn btn-light shadow-sm"><Phone className="size-4" /> {site.phones.emergency.label}</a>
                 </>
               )}
             </div>
@@ -41,16 +49,18 @@ export default function PageHero({ eyebrow, title, description, image, caption, 
         </div>
 
         <div className="lg:col-span-6">
-          <ClipReveal className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-2xl ring-1 ring-white/10">
-            <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
-            {caption && (
-              <div className="glass absolute bottom-5 left-5 right-5 rounded-2xl px-5 py-4">
-                <p className="text-lg font-bold leading-snug">{caption[0]}</p>
-                <p className="text-sm text-white/70">{caption[1]}</p>
-              </div>
-            )}
-          </ClipReveal>
+          <div className="relative ml-4 md:ml-6">
+            <span aria-hidden className="absolute -bottom-4 -left-4 h-full w-full rounded bg-brand md:-bottom-5 md:-left-5" />
+            <div className="relative aspect-[4/3] overflow-hidden rounded bg-navy shadow-2xl">
+              <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+              {caption && (
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/90 to-transparent px-5 pb-5 pt-12 text-white">
+                  <p className="font-display text-lg font-semibold text-white">{caption[0]}</p>
+                  <p className="text-sm text-white/80">{caption[1]}</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

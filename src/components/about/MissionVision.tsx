@@ -12,20 +12,22 @@ export default function MissionVision() {
   ];
 
   return (
-    <section className="bg-mist py-24 md:py-32">
+    <section className="section bg-mist">
       <div className="container-x">
         <SectionHeading centered eyebrow={eyebrow} title={title} />
-        <div className="mt-14 grid gap-5 md:grid-cols-2">
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
           {cards.map(({ Icon, dark, ...card }, i) => (
-            <Reveal key={card.label} delay={i * 0.1} className={cn("relative overflow-hidden rounded-[2rem] p-9 md:p-12", dark ? "bg-ink text-white" : "bg-white")}>
-              <Icon className={cn("size-8", dark ? "text-sun" : "text-royal")} />
-              <p className={cn("mt-8 text-xs font-bold uppercase tracking-[0.2em]", dark ? "text-sky" : "text-royal")}>{card.label}</p>
-              <h3 className="display mt-4 text-3xl md:text-4xl">
+            <Reveal key={card.label} delay={i * 0.08} className={cn("p-9 md:p-12", dark ? "bg-navy text-white" : "card border-l-4 border-brand")}>
+              <span className={cn("grid size-16 place-items-center rounded-full", dark ? "bg-brand text-navy" : "bg-brand-50 text-brand-600")}>
+                <Icon className="size-8" strokeWidth={1.6} />
+              </span>
+              <p className={cn("mt-7 text-xs font-medium uppercase tracking-[0.2em]", dark ? "text-brand" : "text-brand-600")}>{card.label}</p>
+              <h3 className={cn("mt-3 font-display text-3xl font-bold leading-tight", dark && "text-white")}>
                 {card.title[0]}
                 <br />
-                <span className={dark ? "text-flare" : "text-royal"}>{card.title[1]}</span>
+                <span className={dark ? "text-brand" : "text-brand-600"}>{card.title[1]}</span>
               </h3>
-              <p className={cn("mt-5 leading-relaxed", dark ? "text-white/70" : "text-slate")}>{card.text}</p>
+              <p className={cn("mt-5 leading-relaxed", dark ? "text-white/75" : "text-slate")}>{card.text}</p>
             </Reveal>
           ))}
         </div>

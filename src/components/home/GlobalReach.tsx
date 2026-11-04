@@ -6,21 +6,23 @@ export default function GlobalReach() {
   const { eyebrow, title, text, cards } = home.reach;
 
   return (
-    <section className="grain relative overflow-hidden bg-navy py-24 text-white md:py-32">
-      <div className="container-x relative">
-        <SectionHeading light centered eyebrow={eyebrow} title={title} description={text} />
-        <Reveal delay={0.1} className="mt-14">
+    <section className="section">
+      <div className="container-x">
+        <SectionHeading centered eyebrow={eyebrow} title={title} description={text} />
+
+        <Reveal delay={0.1} className="mt-12 rounded bg-navy p-4 shadow-[0_30px_70px_-35px_rgba(7,15,69,0.7)] md:p-10">
           <WorldRouteMap />
         </Reveal>
-        <div className="mt-14 grid gap-5 md:grid-cols-2">
+
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           {cards.map((card, i) => (
-            <Reveal key={card.text} delay={i * 0.1} className="rounded-[2rem] bg-white/5 p-8 ring-1 ring-white/10 md:p-10">
-              <h3 className="display text-3xl">
+            <Reveal key={card.text} delay={i * 0.08} className="card border-l-4 border-brand p-8 md:p-10">
+              <h3 className="font-display text-2xl font-bold leading-tight md:text-3xl">
                 {card.title[0]}
                 <br />
-                <span className="text-sky">{card.title[1]}</span>
+                <span className="text-brand-600">{card.title[1]}</span>
               </h3>
-              <p className="mt-4 text-white/70">{card.text}</p>
+              <p className="mt-4 leading-relaxed text-slate">{card.text}</p>
             </Reveal>
           ))}
         </div>

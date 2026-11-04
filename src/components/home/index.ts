@@ -1,9 +1,9 @@
 export { default as HeroCarousel } from "./HeroCarousel";
+export { default as InfoCards } from "./InfoCards";
+export { default as WhyChooseUs } from "./WhyChooseUs";
 export { default as ServicesShowcase } from "./ServicesShowcase";
-export { default as PatientFirst } from "./PatientFirst";
+export { default as Journey } from "./Journey";
 export { default as HowItWorks } from "./HowItWorks";
-export { default as JourneyAnimation } from "./JourneyAnimation";
 export { default as GlobalReach } from "./GlobalReach";
-export { default as FieldGallery } from "./FieldGallery";
 export { default as HomeFaq } from "./HomeFaq";
 export { default as ClosingCta } from "./ClosingCta";
