@@ -45,7 +45,7 @@ export default function Journey() {
               return (
                 <Reveal key={stage.title} delay={i * 0.08}>
                   <li className={cn("relative flex gap-5 lg:flex-col lg:items-center lg:px-4 lg:text-center", low && "lg:pt-[70px]", low && "max-lg:ml-8")}>
-                    <span className="relative z-10 grid size-[4.5rem] shrink-0 place-items-center rounded-full bg-brand text-navy shadow-[0_14px_30px_-10px_rgba(76,195,240,0.9)] ring-8 ring-white">
+                    <span className="relative z-10 grid size-[4.5rem] shrink-0 place-items-center rounded-full bg-brand text-white shadow-[0_14px_30px_-10px_rgba(16,32,121,0.9)] ring-8 ring-white">
                       <Icon className="size-8" strokeWidth={1.6} />
                       <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-navy text-[0.7rem] font-semibold text-white">{padNumber(i + 1)}</span>
                     </span>

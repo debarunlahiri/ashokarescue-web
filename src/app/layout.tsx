@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/styles/globals.css";
+import ChatWidget from "@/components/chat/ChatWidget";
 import { FloatingActions, Footer, Header } from "@/components/layout";
 import { JsonLd } from "@/components/seo";
 import { seoDefaults, site, siteKeywords } from "@/data";
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: site.meta.title, description: site.meta.description, images: [seoDefaults.shareImage.src] },
 };
 
-export const viewport: Viewport = { themeColor: "#10207a", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#102079", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -69,6 +70,7 @@ gtag('js', new Date());`}
         <main id="main">{children}</main>
         <Footer />
         <FloatingActions />
+        <ChatWidget />
       </body>
     </html>
   );

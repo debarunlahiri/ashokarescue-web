@@ -18,16 +18,16 @@ export default function ServiceHero({ service }: { service: Service }) {
 
       <div className="container-x relative">
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-white/70">
-          <Link href="/" className="hover:text-brand">Home</Link>
+          <Link href="/" className="hover:text-white/70">Home</Link>
           <ChevronRight className="size-3.5" />
-          <Link href="/services" className="hover:text-brand">Services</Link>
+          <Link href="/services" className="hover:text-white/70">Services</Link>
           <ChevronRight className="size-3.5" />
           <span className="text-white">{service.name}</span>
         </nav>
-        <span className="mt-7 grid size-16 place-items-center rounded-full bg-brand text-navy"><Icon className="size-8" strokeWidth={1.6} /></span>
+        <span className="mt-7 grid size-16 place-items-center rounded-full bg-white text-brand"><Icon className="size-8" strokeWidth={1.6} /></span>
         <h1 className="mt-5 max-w-4xl font-display text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl">
           {titleLines.map((line, i) => (
-            <span key={i} className={i === titleLines.length - 1 && titleLines.length > 1 ? "block text-brand" : "block"}>{line}</span>
+            <span key={i} className={i === titleLines.length - 1 && titleLines.length > 1 ? "block text-white" : "block"}>{line}</span>
           ))}
         </h1>
         {service.hero.subtitle && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">{service.hero.subtitle}</p>}
@@ -35,7 +35,7 @@ export default function ServiceHero({ service }: { service: Service }) {
           <Reveal delay={0.1} className="mt-7 flex flex-wrap gap-2">
             {service.badges.map((badge) => (
               <span key={badge} className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-white/20 backdrop-blur">
-                <ShieldCheck className="size-4 text-brand" />
+                <ShieldCheck className="size-4 text-white" />
                 {badge}
               </span>
             ))}

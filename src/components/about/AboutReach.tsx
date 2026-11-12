@@ -26,14 +26,14 @@ export default function AboutReach() {
                   dark ? "bg-navy text-white shadow-[0_30px_70px_-35px_rgba(7,15,69,0.8)]" : "card",
                 )}
               >
-                <Icon aria-hidden strokeWidth={1} className={cn("pointer-events-none absolute -right-8 -top-8 size-56", dark ? "text-white/[0.06]" : "text-brand/10")} />
-                <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1", dark ? "bg-brand" : "bg-navy")} />
+                <Icon aria-hidden strokeWidth={1} className={cn("pointer-events-none absolute -right-8 -top-8 size-56", dark ? "text-white/[0.06]" : "text-white/10")} />
+                <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1", dark ? "bg-white" : "bg-navy")} />
 
                 <div className="relative flex items-center gap-4">
-                  <span className="grid size-14 shrink-0 place-items-center rounded-full bg-brand text-navy shadow-[0_10px_24px_-10px_rgba(76,195,240,0.9)]">
+                  <span className="grid size-14 shrink-0 place-items-center rounded-full bg-brand text-white shadow-[0_10px_24px_-10px_rgba(16,32,121,0.9)] ring-1 ring-white/25">
                     <Icon className="size-6" strokeWidth={1.7} />
                   </span>
-                  <span className={cn("text-xs font-medium uppercase tracking-[0.2em]", dark ? "text-brand" : "text-brand-600")}>{region.label}</span>
+                  <span className={cn("text-xs font-medium uppercase tracking-[0.2em]", dark ? "text-white" : "text-brand-600")}>{region.label}</span>
                 </div>
 
                 <h3 className={cn("relative mt-7 font-display text-2xl font-bold md:text-[2rem]", dark && "text-white")}>{region.title}</h3>
@@ -45,10 +45,10 @@ export default function AboutReach() {
                       key={item}
                       className={cn(
                         "flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[0.93rem] font-medium transition-colors",
-                        dark ? "bg-white/[0.07] text-white hover:bg-brand hover:text-navy" : "bg-mist text-navy hover:bg-brand hover:text-white",
+                        dark ? "bg-white/[0.07] text-white hover:bg-white hover:text-brand" : "bg-mist text-navy hover:bg-brand hover:text-white",
                       )}
                     >
-                      <span className="size-1.5 shrink-0 rounded-full bg-brand group-hover:bg-current" />
+                      <span className="size-1.5 shrink-0 rounded-full bg-current opacity-60" />
                       {item}
                     </li>
                   ))}

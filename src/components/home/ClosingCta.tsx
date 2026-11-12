@@ -15,7 +15,7 @@ export default function ClosingCta() {
           <EcgLine className="mx-auto" />
           <h2 className="mx-auto mt-5 max-w-4xl font-display text-3xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
             {home.closing.map((line, i) => (
-              <span key={i} className={i === home.closing.length - 1 ? "block text-brand" : "block"}>{line}</span>
+              <span key={i} className={i === home.closing.length - 1 ? "block text-white" : "block"}>{line}</span>
             ))}
           </h2>
           <div className="mt-10 flex flex-wrap justify-center gap-3">

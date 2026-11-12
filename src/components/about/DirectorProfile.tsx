@@ -16,7 +16,7 @@ export default function DirectorProfile() {
               <Image src={images.team.director.src} alt={images.team.director.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/95 to-transparent p-6 pt-20">
                 <p className="font-display text-2xl font-bold text-white">{director.name}</p>
-                <p className="mt-1 text-sm font-medium text-brand">{director.credentials}</p>
+                <p className="mt-1 text-sm font-medium text-white">{director.credentials}</p>
                 <p className="text-sm text-white/80">{director.role}</p>
               </div>
             </div>

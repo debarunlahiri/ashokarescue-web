@@ -23,8 +23,8 @@ export default function HowItWorks() {
               <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             </div>
             <div className="absolute -bottom-6 right-4 flex items-center gap-3 bg-navy px-5 py-4 text-white shadow-xl md:-right-6">
-              <span className="grid size-10 place-items-center rounded-full bg-brand"><Phone className="size-4" /></span>
-              <a href={site.phones.emergency.href} className="font-display text-lg font-semibold text-white hover:text-brand">{site.phones.emergency.label}</a>
+              <span className="grid size-10 place-items-center rounded-full bg-white text-brand"><Phone className="size-4" /></span>
+              <a href={site.phones.emergency.href} className="font-display text-lg font-semibold text-white hover:text-white/70">{site.phones.emergency.label}</a>
             </div>
           </Reveal>
         </div>
@@ -35,7 +35,7 @@ export default function HowItWorks() {
             {steps.map((step, i) => (
               <Reveal key={step.title} delay={i * 0.08}>
                 <li className="relative flex gap-5">
-                  <span className="relative z-10 grid size-[3.4rem] shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-navy shadow-[0_10px_24px_-10px_rgba(76,195,240,0.9)] ring-8 ring-mist">
+                  <span className="relative z-10 grid size-[3.4rem] shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-white shadow-[0_10px_24px_-10px_rgba(16,32,121,0.9)] ring-8 ring-mist">
                     {padNumber(i + 1)}
                   </span>
                   <div className="card flex-1 border-l-4 border-brand p-6 transition-transform duration-300 hover:translate-x-1">

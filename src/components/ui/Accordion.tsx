@@ -22,12 +22,12 @@ export default function Accordion({ items, numbered = true, defaultOpenIndex = 0
         return (
           <div
             key={item.question}
-            className={cn("rounded border bg-white transition-all duration-300", isOpen ? "border-brand shadow-[0_14px_40px_-22px_rgba(76,195,240,0.55)]" : "border-line hover:border-brand/50")}
+            className={cn("rounded border bg-white transition-all duration-300", isOpen ? "border-brand shadow-[0_14px_40px_-22px_rgba(16,32,121,0.55)]" : "border-line hover:border-brand/50")}
           >
             <button type="button" onClick={() => setOpenIndex(isOpen ? null : i)} aria-expanded={isOpen} className="flex w-full items-center gap-4 px-5 py-4 text-left md:px-6 md:py-5">
               {numbered && <span className="font-display text-sm font-bold tabular-nums text-brand-600">{padNumber(i + 1)}</span>}
               <span className="flex-1 font-display text-[1.05rem] font-semibold leading-snug text-navy md:text-lg">{item.question}</span>
-              <span className={cn("grid size-8 shrink-0 place-items-center rounded-full transition-all duration-300", isOpen ? "rotate-45 bg-brand text-navy" : "bg-brand-50 text-brand")}>
+              <span className={cn("grid size-8 shrink-0 place-items-center rounded-full transition-all duration-300", isOpen ? "rotate-45 bg-brand text-white" : "bg-brand-50 text-brand")}>
                 <Plus className="size-4" />
               </span>
             </button>

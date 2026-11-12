@@ -14,7 +14,8 @@ export const site = {
     emergency: { label: "+91 9810 36 4143", href: "tel:+919810364143" },
     office: { label: "+91 98189 33004", href: "tel:+919818933004" },
   },
-  whatsapp: "https://wa.link/g90d9x",
+  // Direct wa.me link (opens the chat immediately; the wa.link short URL added a redirect hop).
+  whatsapp: "https://wa.me/919810364143",
   email: "ashokarescue@gmail.com",
   address: {
     lines: ["UG 124, Ansal Palam Corporate Plaza, Palam Vihar,", "Gurugram, Haryana, India — 122017"],

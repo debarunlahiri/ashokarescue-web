@@ -20,10 +20,10 @@ export default function MegaMenu() {
       transition={{ duration: 0.2 }}
       className="absolute inset-x-0 top-full z-10"
     >
-      <div className="grid max-h-[calc(100svh-var(--nav-h)-2rem)] overflow-hidden border-t-2 border-brand bg-white shadow-[0_40px_80px_-30px_rgba(16,32,122,0.5)] lg:grid-cols-[17rem_1fr]">
+      <div className="grid max-h-[calc(100svh-var(--nav-h)-2rem)] overflow-hidden border-t-2 border-brand bg-white shadow-[0_40px_80px_-30px_rgba(16,32,121,0.5)] lg:grid-cols-[17rem_1fr]">
         <aside className="flex flex-col justify-between bg-navy p-7 text-white">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Our services</p>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-white">Our services</p>
             <p className="mt-3 font-display text-xl font-semibold leading-snug text-white">Bedside to bedside, by air, rail and road.</p>
             <p className="mt-3 text-sm leading-relaxed text-white/65">Not sure which option fits? Our team will help you plan the right transfer.</p>
           </div>
@@ -45,7 +45,7 @@ export default function MegaMenu() {
                   return (
                     <li key={service.slug}>
                       <Link href={href} aria-current={isActive ? "page" : undefined} className={cn("group flex items-center gap-3 rounded px-2.5 py-2 transition-colors hover:bg-brand-50", isActive && "bg-brand-50")}>
-                        <span className={cn("grid size-8 shrink-0 place-items-center rounded-full transition-colors", isActive ? "bg-brand text-navy" : "bg-brand-50 text-brand-600 group-hover:bg-brand group-hover:text-navy")}>
+                        <span className={cn("grid size-8 shrink-0 place-items-center rounded-full transition-colors", isActive ? "bg-brand text-white" : "bg-brand-50 text-brand-600 group-hover:bg-brand group-hover:text-white")}>
                           <Icon className="size-4" />
                         </span>
                         <span className="line-clamp-2 text-[0.88rem] font-medium leading-snug text-navy">{service.name}</span>

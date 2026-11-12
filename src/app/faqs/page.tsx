@@ -23,7 +23,7 @@ export default function FaqsPage() {
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
             <SectionHeading eyebrow={intro.eyebrow} title={intro.title} description={intro.text} />
-            <Reveal delay={0.15} className="mt-8 border-t-4 border-brand bg-navy p-6 text-white">
+            <Reveal delay={0.15} className="mt-8 border-t-4 border-white/30 bg-navy p-6 text-white">
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Emergency desk</p>
               <a href={site.phones.emergency.href} className="mt-2 flex items-center gap-3 font-display text-2xl font-semibold text-white hover:text-brand">
                 <Phone className="size-5 text-brand" />

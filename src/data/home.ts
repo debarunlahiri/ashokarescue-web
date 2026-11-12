@@ -83,6 +83,14 @@ export const home = {
     title: ["Every patient deserves", "personal attention."],
     quote: "A patient. A family. A moment that matters.",
     text: "Medical transport is about more than reaching a destination. It means understanding the patient’s needs, keeping the family informed and making sure each stage of the journey connects.",
+    highlights: [
+      { icon: "plane", title: "ICU-Equipped Air Ambulance", text: "Fully equipped aircraft with advanced life-support systems for critical patient transfer." },
+      { icon: "team", title: "Expert Medical Team", text: "Experienced doctors, nurses and paramedics ensuring safe and continuous medical care." },
+      { icon: "globe", title: "International Patient Transfers", text: "Safe and compliant medical transportation across India and to/from USA, Canada, Australia and other countries." },
+      { icon: "support", title: "End-to-End Medical Support", text: "Complete assistance with medical clearance, flight coordination, hospital arrangements and all transfer formalities." },
+      { icon: "stretcher", title: "Commercial Stretcher Services", text: "Specialised stretcher arrangements with medical support on commercial flights." },
+      { icon: "clock", title: "24/7 Assistance & Coordination", text: "Round-the-clock support for enquiries, medical updates and quick transfer arrangements." },
+    ],
     points: [
       {
         title: "Led by medical needs",

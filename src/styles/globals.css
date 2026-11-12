@@ -6,12 +6,15 @@
   --font-display: "Exo 2 Variable", "Exo 2", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Rubik Variable", "Rubik", ui-sans-serif, system-ui, sans-serif;
 
-  /* Primary deep blue #10207A with a soft sky-blue accent. */
-  --color-brand: #4cc3f0;
-  --color-brand-600: #0e7fb8;
-  --color-brand-700: #0a5f8c;
-  --color-brand-50: #e7f6fd;
-  --color-navy: #10207a;
+  /* Single brand blue taken from the logo: #102079. */
+  --color-brand: #102079;
+  --color-brand-600: #102079;
+  --color-brand-700: #0b1760;
+  --color-brand-50: #e8ebf8;
+  --color-navy: #102079;
+  /* Brighter blue for floating buttons so they stay visible over the navy footer. */
+  --color-float: #2f4be0;
+  --color-float-600: #2339b8;
   --color-navy-800: #0b1760;
   --color-navy-900: #070f45;
   --color-ink: #0f1a4a;
@@ -24,8 +27,12 @@
 
 @layer base {
   :root {
-    --nav-h: 4.5rem;
+    --nav-h: 5.75rem;
     --header-h: 4.5rem;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
   }
   html {
     scroll-padding-top: calc(var(--nav-h) + 1rem);
@@ -104,12 +111,12 @@
   }
   .btn-brand {
     background: var(--color-brand);
-    color: var(--color-navy);
+    color: white;
     font-weight: 600;
   }
   .btn-brand:hover {
-    background: #7ad3f5;
-    box-shadow: 0 10px 24px -12px rgb(76 195 240 / 0.9);
+    background: #1a2f9e;
+    box-shadow: 0 10px 24px -12px rgb(16 32 121 / 0.7);
   }
   .btn-dark {
     background: var(--color-navy);
@@ -117,7 +124,7 @@
   }
   .btn-dark:hover {
     background: var(--color-navy-900);
-    box-shadow: 0 10px 24px -12px rgb(16 32 122 / 0.7);
+    box-shadow: 0 10px 24px -12px rgb(16 32 121 / 0.7);
   }
   .btn-light {
     background: white;
@@ -146,7 +153,7 @@
   .card {
     background: white;
     border-radius: 4px;
-    box-shadow: 0 10px 40px -18px rgb(16 32 122 / 0.22);
+    box-shadow: 0 10px 40px -18px rgb(16 32 121 / 0.22);
   }
 
   .field {
@@ -165,7 +172,7 @@
   .field:focus {
     outline: none;
     border-color: var(--color-brand);
-    box-shadow: 0 0 0 3px rgb(76 195 240 / 0.15);
+    box-shadow: 0 0 0 3px rgb(16 32 121 / 0.15);
   }
 
   /* Solid saw-tooth edge in the current text colour: <span class="zigzag text-navy" />. */

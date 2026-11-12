@@ -21,7 +21,7 @@ export default function AboutStory() {
             </div>
             <div className="absolute -bottom-6 right-4 flex items-center gap-4 bg-navy px-5 py-4 text-white shadow-xl md:-right-6">
               <span className="text-xs font-medium uppercase tracking-[0.18em] text-white/70">Established in</span>
-              <span className="font-display text-4xl font-bold text-brand">{site.established}</span>
+              <span className="font-display text-4xl font-bold text-white">{site.established}</span>
             </div>
           </Reveal>
 

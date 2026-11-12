@@ -19,7 +19,7 @@ export default function CtaBanner({ eyebrow, title, description, image }: CtaBan
         <div className="relative overflow-hidden rounded bg-navy px-6 py-14 text-white md:px-14 md:py-16">
           {image && <Image src={image.src} alt="" aria-hidden fill sizes="100vw" className="object-cover opacity-25 mix-blend-luminosity" />}
           <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-navy-900 via-navy/90 to-navy/60" />
-          <span aria-hidden className="absolute inset-y-0 left-0 w-1.5 bg-brand" />
+          <span aria-hidden className="absolute inset-y-0 left-0 w-1.5 bg-white/70" />
 
           <div className="relative grid items-center gap-10 lg:grid-cols-12">
             <div className="lg:col-span-7">
@@ -29,7 +29,7 @@ export default function CtaBanner({ eyebrow, title, description, image }: CtaBan
               </Reveal>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-white md:text-[2.8rem]">
                 {title.map((line, i) => (
-                  <span key={i} className={i === title.length - 1 && title.length > 1 ? "block text-brand" : "block"}>{line}</span>
+                  <span key={i} className={i === title.length - 1 && title.length > 1 ? "block text-white" : "block"}>{line}</span>
                 ))}
               </h2>
               {description && <p className="mt-4 max-w-lg text-lg text-white/75">{description}</p>}

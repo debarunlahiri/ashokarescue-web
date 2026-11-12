@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, ChevronDown, Mail, MapPin, Menu, Phone, X, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { WhatsAppIcon } from "@/components/icons";
 import { Logo } from "@/components/ui";
-import { navigation, site } from "@/data";
+import { images, navigation, site } from "@/data";
 import { setScrollLocked } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
@@ -59,7 +61,7 @@ export default function Header() {
       {/* Logo + contact details. Sticks on mobile (where it carries the menu button); scrolls away on desktop. */}
       <div className="z-50 border-b border-line bg-white max-lg:sticky max-lg:top-0 lg:border-0">
         <div className="container-x flex h-16 items-center justify-between lg:h-[8.25rem]">
-          <Logo />
+          <Logo imageClassName="size-14 lg:size-[6.75rem]" />
 
           <div className="hidden items-start gap-10 lg:flex xl:gap-16">
             <InfoItem icon={Phone} label="Emergency 24/7" value={site.phones.emergency.label} href={site.phones.emergency.href} />
@@ -70,7 +72,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="grid size-11 place-items-center rounded bg-brand text-navy lg:hidden"
+            className="grid size-11 place-items-center rounded bg-brand text-white lg:hidden"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
           >
@@ -83,25 +85,43 @@ export default function Header() {
       <div
         className={cn(
           "sticky top-0 z-50 hidden transition-[background,box-shadow] duration-300 lg:block",
-          isScrolled ? "bg-white shadow-[0_8px_30px_-14px_rgba(16,32,122,0.35)]" : "bg-[linear-gradient(to_bottom,#fff_50%,transparent_50%)]",
+          isScrolled ? "bg-brand shadow-[0_8px_30px_-14px_rgba(16,32,121,0.35)]" : "bg-[linear-gradient(to_bottom,#fff_50%,transparent_50%)]",
         )}
       >
         <div className="container-x">
           <nav
             aria-label="Main"
-            className={cn("relative flex h-[var(--nav-h)] items-center justify-between bg-white px-8 transition-shadow duration-300", !isScrolled && "shadow-[0_14px_40px_-16px_rgba(16,32,122,0.3)]")}
+            className={cn("relative flex h-[var(--nav-h)] items-center justify-between bg-brand px-8 transition-shadow duration-300", !isScrolled && "shadow-[0_14px_40px_-16px_rgba(16,32,121,0.3)]")}
             onMouseLeave={() => setIsMegaOpen(false)}
             onBlur={(e) => {
               if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
             }}
           >
+            <div className="flex items-center gap-8 xl:gap-10">
+            {/* Once the logo strip has scrolled away, keep the logo mark (icon only, no wordmark) in the bar. */}
+            <AnimatePresence initial={false}>
+              {isScrolled && (
+                <motion.div
+                  key="bar-logo"
+                  initial={{ opacity: 0, x: -24, scale: 0.6 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -24, scale: 0.6 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                  className="-ml-4 shrink-0"
+                >
+                  <Link href="/" aria-label="Ashoka Rescue — home" className="block py-2 transition-transform duration-300 hover:scale-105">
+                    <Image src={images.brand.logo.src} alt={images.brand.logo.alt} width={160} height={160} unoptimized className="size-[4.75rem] rounded-sm object-contain" />
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <ul className="flex items-center gap-8 xl:gap-10">
               {navigation.map((item) => {
                 const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 const isServices = item.href === "/services";
                 const className = cn(
                   "flex items-center gap-1 py-6 font-display text-[1.02rem] font-semibold transition-colors",
-                  isActive ? "text-brand-600" : "text-navy hover:text-brand-600",
+                  isActive ? "text-white" : "text-white/80 hover:text-white",
                 );
                 return (
                   <li key={item.href}>
@@ -126,10 +146,12 @@ export default function Header() {
                 );
               })}
             </ul>
+            </div>
 
-            <Link href="/contact#assistance" className="inline-flex h-11 items-center gap-2 rounded bg-brand px-6 font-display text-[0.95rem] font-semibold text-navy transition-colors hover:bg-[#7ad3f5]">
+            <a href={site.whatsapp} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2.5 rounded bg-white px-6 font-display text-[0.95rem] font-semibold text-brand transition-colors hover:bg-brand-50">
+              <WhatsAppIcon className="size-5" />
               Request assistance
-            </Link>
+            </a>
 
             <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
           </nav>

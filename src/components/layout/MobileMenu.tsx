@@ -56,7 +56,7 @@ export default function MobileMenu() {
                                     return (
                                       <li key={service.slug}>
                                         <Link href={href} aria-current={active ? "page" : undefined} className={cn("flex items-center gap-3 rounded p-2 text-[0.95rem] leading-snug", active ? "bg-brand-50 text-navy" : "text-slate active:bg-brand-50")}>
-                                          <span className={cn("grid size-8 shrink-0 place-items-center rounded-full", active ? "bg-brand text-navy" : "bg-brand-50 text-brand-600")}>
+                                          <span className={cn("grid size-8 shrink-0 place-items-center rounded-full", active ? "bg-brand text-white" : "bg-brand-50 text-brand-600")}>
                                             <Icon className="size-4" />
                                           </span>
                                           {service.name}

@@ -5,23 +5,26 @@ import { cn } from "@/lib/utils";
 
 type LogoProps = {
   className?: string;
+  /** Overrides the default logo-mark size. */
+  imageClassName?: string;
   /** "light" is for dark backgrounds (footer). */
   tone?: "dark" | "light";
 };
 
-export default function Logo({ className, tone = "dark" }: LogoProps) {
+export default function Logo({ className, imageClassName, tone = "dark" }: LogoProps) {
   const isLight = tone === "light";
   return (
     <Link href="/" className={cn("flex items-center gap-3", className)} aria-label="Ashoka Rescue — home">
       <Image
         src={images.brand.logo.src}
         alt={images.brand.logo.alt}
-        width={160}
-        height={160}
+        width={240}
+        height={240}
         priority
         unoptimized
-        className={cn("size-12 shrink-0 object-contain md:size-16", isLight && "rounded bg-white p-1")}
+        className={cn("size-12 shrink-0 object-contain md:size-16", isLight && "rounded bg-white p-1", imageClassName)}
       />
+      {/* Wordmark ("Ashoka Rescue / Air Ambulance Services") commented out:
       <span className="leading-none">
         <span className={cn("block font-display text-[1.35rem] font-extrabold uppercase tracking-tight md:text-[1.7rem]", isLight ? "text-white" : "text-navy")}>
           Ashoka Rescue
@@ -30,6 +33,7 @@ export default function Logo({ className, tone = "dark" }: LogoProps) {
           Air Ambulance Services
         </span>
       </span>
+      */}
     </Link>
   );
 }

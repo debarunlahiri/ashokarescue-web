@@ -9,7 +9,7 @@ export default function OfficeLocation() {
     <Reveal delay={0.1} className="mt-6">
       <div className="grid overflow-hidden bg-navy text-white shadow-[0_30px_70px_-35px_rgba(7,15,69,0.7)] md:grid-cols-5">
         <div className="p-8 md:col-span-2 md:p-10">
-          <span className="grid size-14 place-items-center rounded-full bg-brand text-navy"><MapPin className="size-6" /></span>
+          <span className="grid size-14 place-items-center rounded-full bg-brand text-white"><MapPin className="size-6" /></span>
           <h3 className="mt-6 font-display text-3xl font-bold text-white">{contactPage.reach.office}</h3>
           <p className="mt-4 leading-relaxed text-white/75">
             {site.address.lines[0]}

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
-import { WhatsAppIcon } from "@/components/icons";
+// import { WhatsAppIcon } from "@/components/icons"; // used by the disabled WhatsApp button below
 import { site } from "@/data";
 import { scrollToTop } from "@/lib/scroll";
 
@@ -18,7 +18,7 @@ export default function FloatingActions() {
   }, []);
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-24 right-5 z-40 flex flex-col items-end gap-3">
       <AnimatePresence>
         {showBackToTop && (
           <motion.button
@@ -27,7 +27,7 @@ export default function FloatingActions() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
             onClick={scrollToTop}
-            className="grid size-11 place-items-center rounded-full bg-navy text-white shadow-lg transition hover:bg-brand hover:text-navy"
+            className="grid size-11 place-items-center rounded-full bg-float text-white shadow-lg ring-2 ring-white/30 transition hover:bg-float-600 hover:text-white"
             aria-label="Back to top"
           >
             <ArrowUp className="size-4" />
@@ -35,6 +35,7 @@ export default function FloatingActions() {
         )}
       </AnimatePresence>
 
+      {/* WhatsApp button disabled: the chat assistant now sits in this corner.
       <a
         href={site.whatsapp}
         target="_blank"
@@ -46,11 +47,12 @@ export default function FloatingActions() {
         <WhatsAppIcon className="relative size-7" />
         <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded bg-navy px-3 py-1.5 text-xs font-medium opacity-0 transition group-hover:opacity-100">WhatsApp our team</span>
       </a>
+      */}
 
       <a
         href={site.phones.emergency.href}
         aria-label={`Call ${site.phones.emergency.label}`}
-        className="grid size-14 place-items-center rounded-full bg-brand text-navy shadow-[0_12px_30px_-8px_rgba(76,195,240,0.7)] transition hover:-translate-y-1 lg:hidden"
+        className="grid size-14 place-items-center rounded-full bg-float text-white shadow-[0_12px_30px_-8px_rgba(47,75,224,0.75)] ring-2 ring-white/30 transition hover:-translate-y-1 lg:hidden"
       >
         <Phone className="size-6" />
       </a>

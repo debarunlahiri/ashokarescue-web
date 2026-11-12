@@ -1,25 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Award, BedSingle, Clock, Plane, Route, Stethoscope, type LucideIcon } from "lucide-react";
-import { Counter, Reveal } from "@/components/animations";
+import { ArrowRight, BedSingle, ClipboardCheck, Clock, Globe, Plane, UsersRound, type LucideIcon } from "lucide-react";
+import { Reveal } from "@/components/animations";
 import { SectionHeading } from "@/components/common";
 import { EcgLine } from "@/components/icons";
-import { home, images, stats } from "@/data";
+import { home, images } from "@/data";
 
-type Card = { Icon: LucideIcon; title?: string; text: string; stat?: (typeof stats)[number] };
+const icons: Record<string, LucideIcon> = { plane: Plane, team: UsersRound, globe: Globe, support: ClipboardCheck, stretcher: BedSingle, clock: Clock };
 
 export default function WhyChooseUs() {
-  const { eyebrow, title, quote, text, points } = home.patientFirst;
-
-  // Six cards in the template's 3 × 2 grid: the four headline figures plus the two patient-first principles.
-  const cards: Card[] = [
-    { Icon: Award, stat: stats[0], text: stats[0].label.join(" ") },
-    { Icon: Plane, stat: stats[1], text: stats[1].label.join(" ") },
-    { Icon: Stethoscope, title: points[0].title, text: points[0].text },
-    { Icon: Route, title: points[1].title, text: points[1].text },
-    { Icon: BedSingle, stat: stats[2], text: stats[2].label.join(" ") },
-    { Icon: Clock, stat: stats[3], text: stats[3].label.join(" ") },
-  ];
+  const { eyebrow, title, quote, text, highlights } = home.patientFirst;
 
   return (
     <section className="section relative overflow-hidden">
@@ -27,19 +17,18 @@ export default function WhyChooseUs() {
         <SectionHeading centered eyebrow={eyebrow} title={title} />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map(({ Icon, title: cardTitle, text: cardText, stat }, i) => (
-            <Reveal key={i} delay={(i % 3) * 0.08} className="card group flex flex-col items-center p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(76,195,240,0.45)]">
-              <span className="grid size-[4.5rem] place-items-center rounded-full bg-brand-50 text-brand-600 transition-colors duration-300 group-hover:bg-brand group-hover:text-navy">
-                <Icon className="size-8" strokeWidth={1.6} />
-              </span>
-              {stat ? (
-                <Counter to={stat.value} suffix={stat.suffix} className="mt-5 block font-display text-4xl font-bold text-navy" />
-              ) : (
-                <h3 className="mt-5 font-display text-xl font-semibold leading-snug">{cardTitle}</h3>
-              )}
-              <p className="mt-2 max-w-xs text-[0.95rem] leading-relaxed text-slate">{cardText}</p>
-            </Reveal>
-          ))}
+          {highlights.map(({ icon, title: cardTitle, text: cardText }, i) => {
+            const Icon = icons[icon];
+            return (
+              <Reveal key={cardTitle} delay={(i % 3) * 0.08} className="group flex h-full flex-col items-center rounded-2xl border border-white bg-gradient-to-b from-white to-brand-50/60 px-8 pb-9 pt-8 text-center shadow-[0_18px_44px_-22px_rgba(16,32,121,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_-20px_rgba(16,32,121,0.5)]">
+                <span className="grid size-24 place-items-center rounded-full bg-gradient-to-br from-brand-50 to-[#cfd6f3] text-brand-600 shadow-[inset_0_0_0_1px_rgba(16,32,121,0.06)] transition-colors duration-300 group-hover:from-brand group-hover:to-brand-700 group-hover:text-white">
+                  <Icon className="size-10" strokeWidth={1.5} />
+                </span>
+                <h3 className="mt-6 font-display text-[1.65rem] font-extrabold leading-tight tracking-tight text-navy">{cardTitle}</h3>
+                <p className="mt-3 max-w-xs text-base leading-relaxed text-ink/80">{cardText}</p>
+              </Reveal>
+            );
+          })}
         </div>
 
         <div className="mt-20 grid items-center gap-12 md:mt-28 lg:grid-cols-2 lg:gap-16">

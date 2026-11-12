@@ -15,7 +15,7 @@ type ChannelDetails = {
 };
 
 const channelDetails: Record<string, ChannelDetails> = {
-  phone: { href: site.phones.office.href, value: site.phones.office.label, Icon: Phone, external: false, tone: "bg-brand text-navy" },
+  phone: { href: site.phones.office.href, value: site.phones.office.label, Icon: Phone, external: false, tone: "bg-brand text-white" },
   whatsapp: { href: site.whatsapp, value: "Open WhatsApp", Icon: WhatsAppIcon, external: true, tone: "bg-[#25D366] text-white" },
   email: { href: `mailto:${site.email}`, value: site.email, Icon: Mail, external: false, tone: "bg-navy text-white" },
 };

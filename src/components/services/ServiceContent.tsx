@@ -8,7 +8,7 @@ function CheckList({ items }: { items: string[] }) {
     <ul className="my-8 grid gap-3 sm:grid-cols-2">
       {items.map((item) => (
         <li key={item} className="flex items-center gap-3.5 border-l-4 border-brand bg-mist px-4 py-3.5 text-[0.97rem] font-medium text-navy">
-          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand text-navy"><Check className="size-3.5" strokeWidth={3} /></span>
+          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand text-white"><Check className="size-3.5" strokeWidth={3} /></span>
           {item}
         </li>
       ))}

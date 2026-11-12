@@ -52,7 +52,7 @@ export default function ServicesGrid() {
                   href={`/services/${service.slug}`}
                   className="card group flex h-full flex-col border-b-4 border-navy p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand"
                 >
-                  <span className="grid size-[4.25rem] place-items-center rounded-full bg-brand-50 text-brand-600 transition-colors duration-300 group-hover:bg-brand group-hover:text-navy">
+                  <span className="grid size-[4.25rem] place-items-center rounded-full bg-brand-50 text-brand-600 transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
                     <Icon className="size-8" strokeWidth={1.6} />
                   </span>
                   <h3 className="mt-6 font-display text-xl font-semibold leading-tight">{service.name}</h3>

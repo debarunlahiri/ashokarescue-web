@@ -79,19 +79,19 @@ export default function HeroCarousel() {
         <AnimatePresence mode="wait">
           {slide.hasBakedText ? (
             <motion.div key={`b${index}`} className="max-w-md md:hidden" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }} exit={{ opacity: 0 }}>
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-brand">{slide.eyebrow}</p>
+              <p className="text-sm font-medium uppercase tracking-[0.16em] text-white">{slide.eyebrow}</p>
               <p className="mt-3 text-white/85">{slide.text}</p>
             </motion.div>
           ) : (
             <motion.div key={`t${index}`} className="max-w-xl" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.7 } }} exit={{ opacity: 0, y: -12, transition: { duration: 0.25 } }}>
               <h2 className="font-display text-3xl font-bold leading-[1.1] text-white sm:text-4xl lg:text-5xl">
                 {lines.map((l, i) => (
-                  <span key={i} className={cn("block", i === lines.length - 1 && lines.length > 1 && "text-brand")}>{l}</span>
+                  <span key={i} className={cn("block", i === lines.length - 1 && lines.length > 1 && "text-white")}>{l}</span>
                 ))}
               </h2>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/contact#assistance" className="btn btn-brand">Plan a transfer <ArrowRight className="size-4" /></Link>
-                <a href={site.phones.emergency.href} aria-label={`Call ${site.phones.emergency.label}`} className="grid size-12 place-items-center rounded-full bg-white text-navy transition hover:bg-brand"><Phone className="size-5" /></a>
+                <a href={site.phones.emergency.href} aria-label={`Call ${site.phones.emergency.label}`} className="grid size-12 place-items-center rounded-full bg-white text-brand transition hover:bg-white/85"><Phone className="size-5" /></a>
               </div>
             </motion.div>
           )}
@@ -99,15 +99,15 @@ export default function HeroCarousel() {
       </div>
 
       {/* controls */}
-      <button type="button" onClick={() => go(index - 1)} aria-label="Previous slide" className="absolute left-3 top-1/2 z-20 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-brand hover:text-navy md:grid">
+      <button type="button" onClick={() => go(index - 1)} aria-label="Previous slide" className="absolute left-3 top-1/2 z-20 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white hover:text-brand md:grid">
         <ChevronLeft className="size-5" />
       </button>
-      <button type="button" onClick={() => go(index + 1)} aria-label="Next slide" className="absolute right-3 top-1/2 z-20 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-brand hover:text-navy md:grid">
+      <button type="button" onClick={() => go(index + 1)} aria-label="Next slide" className="absolute right-3 top-1/2 z-20 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white hover:text-brand md:grid">
         <ChevronRight className="size-5" />
       </button>
       <div className="container-x absolute inset-x-0 bottom-24 z-20 flex gap-2 md:bottom-28">
         {heroSlides.map((s, i) => (
-          <button key={s.eyebrow} type="button" onClick={() => go(i)} aria-label={`Go to slide ${i + 1}`} aria-current={i === index} className={cn("h-1.5 rounded-full transition-all duration-300", i === index ? "w-10 bg-brand" : "w-4 bg-white/50 hover:bg-white")} />
+          <button key={s.eyebrow} type="button" onClick={() => go(i)} aria-label={`Go to slide ${i + 1}`} aria-current={i === index} className={cn("h-1.5 rounded-full transition-all duration-300", i === index ? "w-10 bg-white" : "w-4 bg-white/50 hover:bg-white")} />
         ))}
       </div>
     </section>

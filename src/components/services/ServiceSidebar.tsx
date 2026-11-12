@@ -8,8 +8,8 @@ import type { Service } from "@/types";
 export default function ServiceSidebar({ relatedServices }: { relatedServices: Service[] }) {
   return (
     <div className="grid gap-6 lg:sticky lg:top-28">
-      <Reveal className="border-t-4 border-brand bg-navy p-7 text-white">
-        <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-brand"><Clock className="size-4" /> Available 24/7</p>
+      <Reveal className="border-t-4 border-white/30 bg-navy p-7 text-white">
+        <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-white"><Clock className="size-4" /> Available 24/7</p>
         <h2 className="mt-4 font-display text-2xl font-semibold text-white">Speak with our medical transport team</h2>
         <p className="mt-3 text-sm leading-relaxed text-white/75">Share the patient’s condition and route. Our coordinators will help assess the safest transfer option.</p>
         <div className="mt-6 grid gap-2.5">
@@ -26,7 +26,7 @@ export default function ServiceSidebar({ relatedServices }: { relatedServices: S
             return (
               <li key={service.slug}>
                 <Link href={`/services/${service.slug}`} className="group flex items-center gap-3 py-3.5">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600 transition group-hover:bg-brand group-hover:text-navy"><Icon className="size-4" /></span>
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600 transition group-hover:bg-brand group-hover:text-white"><Icon className="size-4" /></span>
                   <span className="flex-1 text-[0.92rem] font-medium leading-snug text-navy">{service.name}</span>
                   <ArrowUpRight className="size-4 text-navy/30 transition group-hover:text-brand" />
                 </Link>
@@ -34,7 +34,7 @@ export default function ServiceSidebar({ relatedServices }: { relatedServices: S
             );
           })}
         </ul>
-        <Link href="/services" className="mt-2 inline-block text-sm font-medium text-brand-600 hover:text-brand">All services →</Link>
+        <Link href="/services" className="mt-2 inline-block text-sm font-medium text-brand-600 hover:text-white/70">All services →</Link>
       </Reveal>
     </div>
   );

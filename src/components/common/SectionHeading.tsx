@@ -25,7 +25,7 @@ export default function SectionHeading({ eyebrow, title, description, light = fa
       <Reveal offset={16} delay={0.08}>
         <h2 className={cn("mt-2 font-display text-[2rem] font-bold leading-[1.12] md:text-[2.7rem]", light && "text-white")}>
           {lines.map((line, i) => (
-            <span key={i} className={cn("block", i === lines.length - 1 && lines.length > 1 && (light ? "text-brand" : "text-brand-600"))}>
+            <span key={i} className={cn("block", i === lines.length - 1 && lines.length > 1 && (light ? "text-white" : "text-brand-600"))}>
               {line}
             </span>
           ))}
