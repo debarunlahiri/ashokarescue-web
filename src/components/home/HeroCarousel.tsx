@@ -57,9 +57,6 @@ export default function HeroCarousel() {
 
       <AnimatePresence initial={false}>
         <motion.div key={index} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.9 }}>
-          {slide.hasBakedText && (
-            <Image src={slide.image.src} alt="" aria-hidden fill sizes="64px" quality={40} className="scale-110 object-cover blur-md brightness-75 md:hidden" />
-          )}
           <Image
             src={slide.image.src}
             alt={slide.image.alt}
@@ -67,9 +64,9 @@ export default function HeroCarousel() {
             priority={index === 0}
             unoptimized
             sizes="100vw"
-            className={slide.hasBakedText ? "object-contain object-center md:object-cover md:object-left" : "object-cover object-[70%_center]"}
+            className={slide.hasBakedText ? "object-cover object-[75%_center] md:object-left" : "object-cover object-[70%_center]"}
           />
-          {!slide.hasBakedText && <div className="absolute inset-0 bg-gradient-to-r from-navy-900/55 via-navy-900/20 to-transparent max-md:from-navy-900/55 max-md:via-navy-900/35 max-md:to-navy-900/20" />}
+          <div className={cn("absolute inset-0 bg-gradient-to-r from-navy-900/55 via-navy-900/20 to-transparent max-md:from-navy-900/55 max-md:via-navy-900/35 max-md:to-navy-900/20", slide.hasBakedText && "md:hidden")} />
           <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-navy-900/40 to-transparent" />
         </motion.div>
       </AnimatePresence>
@@ -77,13 +74,8 @@ export default function HeroCarousel() {
       {/* copy */}
       <div className="container-x relative z-10 flex h-full flex-col justify-end pb-36 pt-24 md:pb-40 md:pt-28">
         <AnimatePresence mode="wait">
-          {slide.hasBakedText ? (
-            <motion.div key={`b${index}`} className="max-w-md md:hidden" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }} exit={{ opacity: 0 }}>
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-white">{slide.eyebrow}</p>
-              <p className="mt-3 text-white/85">{slide.text}</p>
-            </motion.div>
-          ) : (
-            <motion.div key={`t${index}`} className="max-w-xl" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.7 } }} exit={{ opacity: 0, y: -12, transition: { duration: 0.25 } }}>
+          {(
+            <motion.div key={`t${index}`} className={cn("max-w-xl", slide.hasBakedText && "md:hidden")} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.7 } }} exit={{ opacity: 0, y: -12, transition: { duration: 0.25 } }}>
               <h2 className="font-display text-3xl font-bold leading-[1.1] text-white sm:text-4xl lg:text-5xl">
                 {lines.map((l, i) => (
                   <span key={i} className={cn("block", i === lines.length - 1 && lines.length > 1 && "text-white")}>{l}</span>
