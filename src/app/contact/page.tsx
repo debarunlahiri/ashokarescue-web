@@ -24,9 +24,9 @@ export default function ContactPage() {
         image={images.hero.expertPanel}
         actions={
           <>
-            <a href={site.phones.emergency.href} className="btn btn-dark"><Phone className="size-4" /> Call emergency desk</a>
+            <a href={site.phones.emergency.href} className="btn btn-dark"><Phone className="size-4" /> Call the emergency line</a>
             <a href={site.whatsapp} target="_blank" rel="noreferrer" className="btn btn-light shadow-sm"><WhatsAppIcon /> Message on WhatsApp</a>
-            <p className="mt-2 w-full text-sm text-slate">{hero.note.join(" ")}</p>
+            <p className="mt-2 w-full text-sm text-slate">{hero.note}</p>
           </>
         }
       />
@@ -36,7 +36,7 @@ export default function ContactPage() {
           <OfficeLocation />
         </div>
       </section>
-      <AssistanceSection />
+      <AssistanceSection showOfficeMap={false} />
       <NextSteps />
     </>
   );

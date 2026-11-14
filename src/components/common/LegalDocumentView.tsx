@@ -6,7 +6,7 @@ import { padNumber } from "@/lib/utils";
 export default function LegalDocumentView({ document }: { document: LegalDocument }) {
   return (
     <>
-      <section className="under-nav relative overflow-hidden bg-mist pb-14 pt-12 md:pb-20 lg:pt-28">
+      <section className="relative overflow-hidden bg-mist pb-14 pt-12 md:pb-20 lg:pt-28">
         <div aria-hidden className="absolute -right-24 -top-24 size-[380px] rounded-full bg-brand/10" />
         <div className="container-x relative">
           <EcgLine />

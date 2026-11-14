@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleCheck, LoaderCircle, Send } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { assistance, serviceOptions } from "@/data";
+import { enquiryLimits, validateEnquiryField } from "@/lib/enquiry-validation";
 import FormField from "./FormField";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -12,11 +13,25 @@ type Status = "idle" | "sending" | "sent" | "error";
 export default function AssistanceForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const submitting = useRef(false);
   const { fields } = assistance;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const payload = Object.fromEntries(new FormData(event.currentTarget));
+    if (submitting.current) return;
+    const form = event.currentTarget;
+    const payload = Object.fromEntries(new FormData(form));
+    for (const key of ["from", "to", "name", "phone", "email", "notes"] as const) {
+      const result = validateEnquiryField(key, payload[key] ?? "");
+      if (result.value === undefined) {
+        setErrorMessage(result.error);
+        setStatus("error");
+        (form.elements.namedItem(key) as HTMLElement | null)?.focus();
+        return;
+      }
+      payload[key] = result.value;
+    }
+    submitting.current = true;
     setStatus("sending");
     setErrorMessage("");
 
@@ -32,6 +47,8 @@ export default function AssistanceForm() {
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Something went wrong.");
       setStatus("error");
+    } finally {
+      submitting.current = false;
     }
   }
 
@@ -49,7 +66,7 @@ export default function AssistanceForm() {
               <CircleCheck className="size-10" />
             </motion.span>
             <h3 className="mt-6 font-display text-3xl font-bold">Request received.</h3>
-            <p className="mt-3 max-w-sm text-slate">Our medical transport team will be in touch shortly. For urgent help, call the emergency desk.</p>
+            <p className="mt-3 max-w-sm text-slate">Call our coordination team to confirm the next steps for your request.</p>
             <button type="button" onClick={() => setStatus("idle")} className="btn btn-outline mt-6">Send another request</button>
           </motion.div>
         ) : (
@@ -65,8 +82,8 @@ export default function AssistanceForm() {
             <fieldset className="grid gap-4">
               <legend className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-brand-600">Journey details</legend>
               <div className="grid gap-4 sm:grid-cols-2">
-                <FormField label={fields.from.label}><input required name="from" placeholder={fields.from.placeholder} className="field" /></FormField>
-                <FormField label={fields.to.label}><input required name="to" placeholder={fields.to.placeholder} className="field" /></FormField>
+                <FormField label={fields.from.label}><input required name="from" maxLength={enquiryLimits.from} placeholder={fields.from.placeholder} className="field" /></FormField>
+                <FormField label={fields.to.label}><input required name="to" maxLength={enquiryLimits.to} placeholder={fields.to.placeholder} className="field" /></FormField>
               </div>
               <FormField label={fields.service.label}>
                 <select name="service" defaultValue="" className="field appearance-none">
@@ -78,12 +95,12 @@ export default function AssistanceForm() {
 
             <fieldset className="grid gap-4">
               <legend className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-brand-600">Your details</legend>
-              <FormField label={fields.name.label}><input required name="name" placeholder={fields.name.placeholder} className="field" autoComplete="name" /></FormField>
+              <FormField label={fields.name.label}><input required name="name" maxLength={enquiryLimits.name} placeholder={fields.name.placeholder} className="field" autoComplete="name" /></FormField>
               <div className="grid gap-4 sm:grid-cols-2">
-                <FormField label={fields.phone.label}><input required name="phone" type="tel" placeholder={fields.phone.placeholder} className="field" autoComplete="tel" /></FormField>
-                <FormField label={fields.email.label}><input name="email" type="email" placeholder={fields.email.placeholder} className="field" autoComplete="email" /></FormField>
+                <FormField label={fields.phone.label}><input required name="phone" maxLength={enquiryLimits.phone} type="tel" placeholder={fields.phone.placeholder} className="field" autoComplete="tel" /></FormField>
+                <FormField label={fields.email.label}><input name="email" maxLength={enquiryLimits.email} type="email" placeholder={fields.email.placeholder} className="field" autoComplete="email" /></FormField>
               </div>
-              <FormField label={fields.notes.label}><textarea name="notes" rows={3} placeholder={fields.notes.placeholder} className="field resize-none" /></FormField>
+              <FormField label={fields.notes.label}><textarea name="notes" maxLength={enquiryLimits.notes} rows={3} placeholder={fields.notes.placeholder} className="field resize-none" /></FormField>
             </fieldset>
 
             <p className="border-l-4 border-brand bg-mist px-4 py-3 text-sm text-navy">{assistance.privacyNote}</p>
@@ -96,7 +113,7 @@ export default function AssistanceForm() {
               </span>
             </label>
 
-            {status === "error" && <p className="text-sm font-semibold text-signal">{errorMessage}</p>}
+            {status === "error" && <p role="alert" className="text-sm font-semibold text-signal">{errorMessage}</p>}
 
             <button type="submit" disabled={status === "sending"} className="btn btn-dark !py-4 disabled:opacity-70">
               {status === "sending" ? <LoaderCircle className="size-5 animate-spin" /> : <Send className="size-4" />}

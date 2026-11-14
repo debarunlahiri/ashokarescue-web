@@ -29,8 +29,13 @@ export default function ServicesGrid() {
           className="field !py-4 !pl-12 !pr-12 text-base shadow-sm"
         />
         {query && (
-          <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full bg-brand-50 text-brand-700">
-            <X className="size-4" />
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            aria-label="Clear search"
+            className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full text-brand-700 hover:bg-brand-50"
+          >
+            <X aria-hidden className="size-4" />
           </button>
         )}
       </div>
@@ -50,14 +55,18 @@ export default function ServicesGrid() {
               >
                 <Link
                   href={`/services/${service.slug}`}
-                  className="card group flex h-full flex-col border-b-4 border-navy p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand"
+                  className="card group flex h-full flex-col border-b-4 border-navy p-5 transition-all duration-300 hover:-translate-y-1 hover:border-brand sm:p-7"
                 >
                   <span className="grid size-[4.25rem] place-items-center rounded-full bg-brand-50 text-brand-600 transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
                     <Icon className="size-8" strokeWidth={1.6} />
                   </span>
                   <h3 className="mt-6 font-display text-xl font-semibold leading-tight">{service.name}</h3>
                   <p className="mt-3 line-clamp-3 text-[0.95rem] leading-relaxed text-slate">{service.excerpt}</p>
-                  <span className="mt-auto pt-6"><span className="btn btn-brand !px-5 !py-2.5 !normal-case !tracking-normal">Read more</span></span>
+                  <span className="mt-auto pt-6">
+                    <span className="btn min-h-11 w-full bg-[#19309E] font-semibold text-white !px-5 !py-2.5 !normal-case !tracking-normal group-hover:bg-[#12247D] group-focus-visible:bg-[#12247D] group-active:bg-[#12247D] sm:w-auto">
+                      Read more
+                    </span>
+                  </span>
                 </Link>
               </motion.div>
             );

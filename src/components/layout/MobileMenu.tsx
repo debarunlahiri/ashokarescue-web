@@ -20,7 +20,7 @@ export default function MobileMenu() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto overscroll-contain bg-white pb-10 lg:hidden"
+      className="fixed inset-x-0 bottom-0 top-[var(--nav-h)] z-40 overflow-y-auto overscroll-contain bg-white pb-10 lg:hidden"
     >
       <div className="container-x">
         <nav aria-label="Mobile" className="flex flex-col">
@@ -85,7 +85,7 @@ export default function MobileMenu() {
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           <a href={site.phones.emergency.href} className="btn btn-brand"><Phone className="size-4" /> {site.phones.emergency.label}</a>
-          <a href={site.whatsapp} target="_blank" rel="noreferrer" className="btn btn-outline">WhatsApp our team</a>
+          <a href={site.whatsapp} target="_blank" rel="noreferrer" className="btn btn-outline">Contact us on WhatsApp</a>
         </div>
       </div>
     </motion.div>

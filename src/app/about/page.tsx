@@ -4,12 +4,13 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
 import { AboutReach, AboutStory, DirectorProfile, MissionVision, OurPrinciples } from "@/components/about";
 import { CtaBanner, PageHero } from "@/components/common";
-import { about, images } from "@/data";
+import { about, images, site } from "@/data";
 
 export const metadata: Metadata = buildMetadata({ meta: about.meta, path: "/about" });
 
 export default function AboutPage() {
-  const { hero, cta } = about;
+  const { hero } = about;
+  const { transferCta } = site;
 
   return (
     <>
@@ -20,7 +21,7 @@ export default function AboutPage() {
       <OurPrinciples />
       <MissionVision />
       <AboutReach />
-      <CtaBanner eyebrow={cta.eyebrow} title={cta.title} description={cta.text} image={images.hero.expertPanel} />
+      <CtaBanner eyebrow={transferCta.eyebrow} title={transferCta.title} description={transferCta.text} image={images.hero.expertPanel} />
     </>
   );
 }

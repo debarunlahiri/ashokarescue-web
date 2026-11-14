@@ -48,7 +48,7 @@ export default function HowItWorks() {
           </ol>
 
           <Reveal delay={0.2} className="mt-10 pl-[4.4rem]">
-            <Link href="/contact#assistance" className="btn btn-dark">Start with a call</Link>
+            <Link href="/contact#assistance" className="btn btn-dark">Request transfer assistance</Link>
           </Reveal>
         </div>
       </div>

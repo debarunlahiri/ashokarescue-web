@@ -76,9 +76,8 @@ export const faqPage = {
     caption: ["Guidance for your journey.", "For patients and their families."],
   },
   intro: {
-    eyebrow: "General information",
-    title: "Answers for patients and families",
-    text: "Browse the most common questions about arranging medical transport. For advice about a specific patient, speak directly with our coordination team.",
+    title: "Patient transfer FAQs",
+    text: "Find answers about medical flights and travel arrangements. For questions about a specific patient, call our coordination team.",
   },
   homeTitle: ["Questions about", "your transfer?"],
   cta: {

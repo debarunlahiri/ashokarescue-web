@@ -17,7 +17,15 @@ export default function CtaBanner({ eyebrow, title, description, image }: CtaBan
     <section className="section">
       <div className="container-x">
         <div className="relative overflow-hidden rounded bg-navy px-6 py-14 text-white md:px-14 md:py-16">
-          {image && <Image src={image.src} alt="" aria-hidden fill sizes="100vw" className="object-cover opacity-25 mix-blend-luminosity" />}
+          {image && (
+            <Image
+              src={image.src}
+              alt=""
+              fill
+              sizes="(min-width: 1240px) 1176px, (min-width: 768px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
+              className="object-cover opacity-25"
+            />
+          )}
           <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-navy-900 via-navy/90 to-navy/60" />
           <span aria-hidden className="absolute inset-y-0 left-0 w-1.5 bg-white/70" />
 
@@ -35,7 +43,7 @@ export default function CtaBanner({ eyebrow, title, description, image }: CtaBan
               {description && <p className="mt-4 max-w-lg text-lg text-white/75">{description}</p>}
             </div>
             <Reveal delay={0.15} className="grid gap-3 lg:col-span-5">
-              <a href={site.phones.emergency.href} className="btn btn-brand !justify-between !py-4 text-sm">
+              <a href={site.phones.emergency.href} className="btn justify-between bg-[#19309E] py-4 font-semibold text-white hover:bg-[#12247D] focus-visible:outline-white">
                 <span className="flex items-center gap-3"><Phone className="size-5" /> {site.phones.emergency.label}</span>
                 <ArrowRight className="size-4" />
               </a>

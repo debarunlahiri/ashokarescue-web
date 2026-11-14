@@ -6,7 +6,7 @@ import { cn, padNumber } from "@/lib/utils";
 
 const stageIcons: LucideIcon[] = [BedSingle, Ambulance, Plane, PlaneLanding, Hospital];
 
-/** The bedside-to-bedside story as a winding route: stops sit on an S-curve and stagger up and down. */
+/** The five stages of an air ambulance transfer, shown along a winding route. */
 export default function Journey() {
   const { eyebrow, title, description, stages } = home.journey;
 

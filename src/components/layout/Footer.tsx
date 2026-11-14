@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
-import { SocialIcon, WhatsAppIcon, type SocialNetwork } from "@/components/icons";
+import { SocialIcon, type SocialNetwork } from "@/components/icons";
 import { Logo } from "@/components/ui";
 import { services, site } from "@/data";
 
@@ -8,48 +8,14 @@ const companyLinks = [
   { label: "About us", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
-  { label: "FAQs", href: "/faqs" },
+  { label: "Transfer FAQs", href: "/faqs" },
 ];
-
-/** Slim full-width call-to-action strip above the footer. */
-function ContactBand() {
-  return (
-    <div className="border-b border-white/10 bg-brand text-white">
-      <div className="container-x flex flex-col gap-6 py-8 lg:flex-row lg:items-center lg:justify-between lg:py-9">
-        <div className="flex items-center gap-4">
-          <span className="hidden size-14 shrink-0 place-items-center rounded-full bg-white/10 sm:grid">
-            <Phone className="size-6" strokeWidth={1.7} />
-          </span>
-          <div>
-            <h2 className="font-display text-2xl font-bold leading-tight text-white md:text-[1.9rem]">Need an air ambulance right now?</h2>
-            <p className="mt-1 text-sm text-white/80">{site.hours}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <a href={site.phones.emergency.href} className="btn btn-light !normal-case !tracking-normal text-base">
-            <Phone className="size-4" /> {site.phones.emergency.label}
-          </a>
-          <a href={site.whatsapp} target="_blank" rel="noreferrer" className="btn btn-outline-light !normal-case !tracking-normal">
-            <WhatsAppIcon className="size-4" /> WhatsApp
-          </a>
-          <Link href="/contact#assistance" className="btn btn-outline-light !normal-case !tracking-normal">
-            Plan a transfer <ArrowRight className="size-4" />
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Footer() {
   const socialNetworks = Object.keys(site.social) as SocialNetwork[];
 
   return (
-    <footer className="text-white">
-      <ContactBand />
-      <div className="bg-navy">
-
+    <footer className="bg-navy text-white">
       <div className="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Logo tone="light" />
@@ -73,21 +39,38 @@ export default function Footer() {
             {services.slice(0, 8).map((service) => (
               <li key={service.slug}><Link className="transition-colors hover:text-white/70" href={`/services/${service.slug}`}>{service.name}</Link></li>
             ))}
-            <li><Link className="font-medium text-white hover:text-white" href="/services">All {services.length} services →</Link></li>
+            <li>
+              <Link href="/services" className="inline-flex items-center gap-2 font-medium text-white hover:underline">
+                All {services.length} services
+                <ArrowRight aria-hidden className="size-4" />
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div className="lg:col-span-3">
-          <h3 className="font-display text-base font-semibold uppercase tracking-wide text-white">Talk to our team</h3>
+          <h3 className="font-display text-base font-semibold uppercase tracking-wide text-white">Transfer assistance</h3>
           <ul className="mt-5 grid gap-4 text-sm text-white/75">
-            <li className="flex gap-3"><Phone className="mt-0.5 size-4 shrink-0 text-white" /><span><a href={site.phones.emergency.href} className="block hover:text-white/70">{site.phones.emergency.label}</a><a href={site.phones.office.href} className="block hover:text-white/70">{site.phones.office.label}</a></span></li>
+            <li className="flex gap-3">
+              <Phone aria-hidden className="mt-0.5 size-4 shrink-0 text-white" />
+              <div className="grid gap-2">
+                <a href={site.phones.emergency.href} className="hover:underline">
+                  <span className="block font-medium text-white">24/7 transfer line</span>
+                  {site.phones.emergency.label}
+                </a>
+                <a href={site.phones.office.href} className="hover:underline">
+                  <span className="block font-medium text-white">Office enquiries</span>
+                  {site.phones.office.label}
+                </a>
+              </div>
+            </li>
             <li className="flex gap-3"><Mail className="mt-0.5 size-4 shrink-0 text-white" /><a href={`mailto:${site.email}`} className="hover:text-white/70">{site.email}</a></li>
             <li className="flex gap-3"><MapPin className="mt-0.5 size-4 shrink-0 text-white" /><a href={site.address.mapUrl} target="_blank" rel="noreferrer" className="hover:text-white/70">{site.address.lines.join(" ")}</a></li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-white/10 bg-navy-900">
         <div className="container-x flex flex-col gap-4 py-6 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {site.legalName.replace(/\.$/, "")}. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -102,7 +85,17 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </div>
+        <p className="container-x pb-6 text-center text-sm text-white/60">
+          Designed and developed by{" "}
+          <a
+            href="https://techproitsolutions.in/"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-white underline underline-offset-4 hover:text-white/80 focus-visible:outline-white"
+          >
+            Techpro IT Solutions
+          </a>
+        </p>
       </div>
     </footer>
   );

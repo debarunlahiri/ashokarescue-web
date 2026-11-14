@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { AssistanceSection } from "@/components/common";
-import { site } from "@/data";
+import { AssistanceSection, CtaBanner } from "@/components/common";
+import { images, site } from "@/data";
 import { buildMetadata } from "@/lib/seo";
 import {
-  ClosingCta,
   GlobalReach,
   HeroCarousel,
   HomeFaq,
@@ -17,6 +16,8 @@ import {
 export const metadata: Metadata = buildMetadata({ meta: site.meta, path: "/" });
 
 export default function HomePage() {
+  const { transferCta } = site;
+
   return (
     <>
       <HeroCarousel />
@@ -27,8 +28,13 @@ export default function HomePage() {
       <HowItWorks />
       <GlobalReach />
       <HomeFaq />
-      <AssistanceSection />
-      <ClosingCta />
+      <AssistanceSection showOfficeMap={false} />
+      <CtaBanner
+        eyebrow={transferCta.eyebrow}
+        title={transferCta.title}
+        description={transferCta.text}
+        image={images.hero.expertPanel}
+      />
     </>
   );
 }

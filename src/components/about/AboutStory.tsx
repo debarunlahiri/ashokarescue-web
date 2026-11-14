@@ -28,9 +28,7 @@ export default function AboutStory() {
           <div className="lg:col-span-6 lg:pl-6">
             <Reveal>
               <h3 className="font-display text-3xl font-bold leading-tight md:text-4xl">
-                {story.heading[0]}
-                <br />
-                <span className="text-brand-600">{story.heading[1]}</span>
+                {story.heading}
               </h3>
             </Reveal>
             {story.paragraphs.map((paragraph, i) => (

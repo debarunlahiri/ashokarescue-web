@@ -8,14 +8,14 @@ export const about = {
   hero: {
     eyebrow: "About Ashoka Rescue",
     title: ["Every journey.", "Every patient.", "Care comes first."],
-    text: "When the journey matters most, we bring medical expertise and human care together. By your side, from one bedside to the next.",
+    text: "We coordinate patient transport and medical care from the pickup location through handover to the receiving team.",
     caption: ["Expertise in motion.", "Compassion at every step."],
   },
   story: {
     eyebrow: "Who we are",
     title: ["Medical expertise.", "A human commitment."],
     intro: "Helping patients reach the care they need, with a team that understands what the journey means.",
-    heading: ["Care that connects.", "From one bedside to the next."],
+    heading: "Medical care throughout the transfer",
     paragraphs: [
       "Ashoka Rescue Air Ambulance Services Pvt. Ltd. provides medical transportation across India and internationally. Since 2004, we have brought medical expertise and transport coordination together for patients and families.",
       "Our services include charter air ambulance, commercial stretcher travel, medical escorts, road ambulance transfers and medical tourism assistance. Each journey is planned around the patient’s needs and destination.",
@@ -91,9 +91,5 @@ export const about = {
     title: "Our certificate of incorporation",
     text: "View Ashoka Rescue’s company registration document.",
   },
-  cta: {
-    eyebrow: "Here when you need us",
-    title: ["Let’s talk about", "the next step."],
-    text: "Our medical transport coordination team is available 24 hours, every day.",
-  },
+
 };

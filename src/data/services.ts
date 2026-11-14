@@ -11,7 +11,7 @@ export const servicesPage = {
     eyebrow: "Our medical transport services",
     title: ["The right care.", "The right journey.", "All the way there."],
     text: "By air, road, or rail, we connect patients to the care they need. Every transfer is coordinated around their condition, comfort, and destination.",
-    caption: ["Patient first.", "From bedside to bedside."],
+    caption: ["Patient transport", "From pickup to handover"],
   },
   explore: {
     eyebrow: "Explore our services",
@@ -33,7 +33,7 @@ export const servicesPage = {
       },
       {
         title: "Share the route",
-        text: "Let us know the pickup location and destination. We coordinate the transport around the journey and clinical needs.",
+        text: "Share the pickup and drop locations. We coordinate the transport around the journey and clinical needs.",
       },
       {
         title: "Plan with our team",
@@ -830,7 +830,7 @@ export const services: Service[] = [
       { type: "heading", text: "Heart and Lung Transplant Patient Shifting" },
       {
         type: "paragraph",
-        text: "Ashoka Rescue Medical Transports patients globally for heart and lung transplants using air ambulances, commercial stretchers, train ambulances, and road ambulances equipped with ECMO, ventilators, BI-PAP, and oxygen in both lying and sitting positions. Ashoka Rescue specializes in transporting patients with interstitial lung disease in business class, seated positions with oxygen supplementation, providing comprehensive bedside-to-bedside assistance.",
+        text: "Ashoka Rescue Medical Transports patients globally for heart and lung transplants using air ambulances, commercial stretchers, train ambulances, and road ambulances equipped with ECMO, ventilators, BI-PAP, and oxygen in both lying and sitting positions. Ashoka Rescue specializes in transporting patients with interstitial lung disease in business class, seated positions with oxygen supplementation, coordinating care from pickup to handover.",
       },
       {
         type: "paragraph",
@@ -945,7 +945,7 @@ export const services: Service[] = [
     gallery: "airAmbulance",
     hero: {
       title: "Air Ambulance Services in India",
-      subtitle: "ICU-equipped aircraft, experienced medical teams, and complete bedside-to-bedside coordination across India and worldwide.",
+      subtitle: "ICU-equipped aircraft, experienced medical teams, and transfer coordination from pickup to handover across India and worldwide.",
     },
     meta: {
       title: "Air Ambulance Services in India | Ashoka Rescue",

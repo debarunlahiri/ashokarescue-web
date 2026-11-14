@@ -6,4 +6,3 @@ export { default as Journey } from "./Journey";
 export { default as HowItWorks } from "./HowItWorks";
 export { default as GlobalReach } from "./GlobalReach";
 export { default as HomeFaq } from "./HomeFaq";
-export { default as ClosingCta } from "./ClosingCta";

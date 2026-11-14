@@ -1,68 +1,93 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, MessageCircle, RotateCcw, Send, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, MessageCircle, Phone, RotateCcw, Send, X } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import { WhatsAppIcon } from "@/components/icons";
 import { site } from "@/data";
+import { emergencyGuidance, getChatUrgency, getUrgentChatMessage } from "@/lib/chat-urgency";
+import { enquiryLimits, getTransferToday, validateEnquiryField, type EnquiryField } from "@/lib/enquiry-validation";
 import { cn } from "@/lib/utils";
 
 type Action = { label: string; url?: string; action?: "transfer"; prompt?: string; value?: string; flow?: "submit" | "cancel" | "restart" };
-type Msg = { id: number; role: "user" | "assistant"; text: string; actions?: Action[]; pending?: boolean };
-type FlowKey = "origin" | "destination" | "travel_date" | "service" | "patient_needs" | "name" | "phone" | "consent";
+type Msg = {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+  actions?: Action[];
+  pending?: boolean;
+  review?: { label: string; value: string }[];
+};
+type FlowKey = Exclude<EnquiryField, "email" | "notes"> | "consent";
 
-const GREETING = "Hi, I’m Ashoka AI. I can explain our services, guide a transfer request, or take you to the right page.";
+const GREETING = "How soon does the patient need to be transferred? For urgent transport, call our team directly.";
 const STARTERS: Action[] = [
-  { label: "Show me services", prompt: "Tell me about your medical transport services" },
-  { label: "I need a transfer", action: "transfer" },
-  { label: "Compare options", prompt: "Compare your medical transport options" },
-  { label: "How it works", prompt: "How does Ashoka Rescue arrange a patient transfer?" },
-  { label: "What does it cost?", prompt: "How is the price of a patient transfer calculated?" },
+  { label: "Urgent transfer", prompt: "I need an urgent transfer" },
+  { label: "Plan a transfer", action: "transfer" },
 ];
-const STEPS: { key: FlowKey; question: string; options?: string[] }[] = [
-  { key: "origin", question: "Where is the patient travelling from?" },
-  { key: "destination", question: "What is the destination city or hospital?" },
-  { key: "travel_date", question: "When is the transfer needed? You can say today, urgent, or provide a date." },
-  { key: "service", question: "Do you have a transport preference?", options: ["Not sure", "Charter air ambulance", "Commercial stretcher", "Medical escort", "Road ambulance", "Train ambulance"] },
-  { key: "patient_needs", question: "Briefly describe the patient’s mobility or support needs. Please do not share medical records." },
-  { key: "name", question: "What is your name?" },
-  { key: "phone", question: "What phone number should our coordination team call?" },
-  { key: "consent", question: "May Ashoka Rescue contact you about this transfer request?", options: ["Yes", "No"] },
+const BROWSE_PROMPT = "Show me your medical transport services";
+const STEPS: { key: FlowKey; label: string; question: string; options?: string[] }[] = [
+  { key: "from", label: "Pickup location", question: "What is the pickup location?" },
+  { key: "to", label: "Drop location", question: "What is the drop location?" },
+  {
+    key: "travel_date",
+    label: "Transfer date",
+    question: "When is the transfer needed? Pick a date below or select Not sure.",
+    options: ["Not sure"],
+  },
+  { key: "patient_needs", label: "Support needs", question: "Briefly describe the patient’s mobility or support needs. Please do not share medical records." },
+  { key: "name", label: "Contact name", question: "What is your name?" },
+  { key: "phone", label: "Phone number", question: "What phone number should our coordination team call? Include the country code for numbers outside India." },
+  { key: "consent", label: "Contact permission", question: "May Ashoka Rescue contact you about this transfer request?", options: ["Yes", "No"] },
 ];
-const SERVICE_CHOICES = ["Not sure — please advise", "Charter air ambulance", "Commercial stretcher", "Business-class assistance", "Medical escort", "Road ambulance", "Train ambulance"];
+
+const reviewDateFormatter = new Intl.DateTimeFormat("en-IN", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+function formatReviewDate(value: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return reviewDateFormatter.format(new Date(value));
+  }
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
 
 const actionClass = "inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-white px-3.5 py-1.5 text-left text-[0.8rem] font-medium text-brand transition hover:bg-brand hover:text-white";
 
-let nextId = 1;
-
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([{ id: 0, role: "assistant", text: GREETING, actions: STARTERS }]);
+  const [messages, setMessages] = useState<Msg[]>([{ id: "greeting", role: "assistant", text: GREETING, actions: STARTERS }]);
   const [input, setInput] = useState("");
   const [flow, setFlow] = useState<{ step: number; data: Partial<Record<FlowKey, string>>; review?: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
   const [enquiry, setEnquiry] = useState(false);
   const [enquirySending, setEnquirySending] = useState(false);
   const [enquiryError, setEnquiryError] = useState("");
+  const submitting = useRef(false);
+  const pendingReply = useRef<AbortController | null>(null);
   const history = useRef<{ role: "user" | "assistant"; text: string }[]>([]);
   const log = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLTextAreaElement>(null);
   const root = useRef<HTMLDivElement>(null);
 
   const push = useCallback((m: Omit<Msg, "id">) => {
-    const id = nextId++;
+    const id = crypto.getRandomValues(new Uint32Array(4)).join("-");
     setMessages((prev) => [...prev, { ...m, id }]);
     return id;
   }, []);
-  const patch = (id: number, p: Partial<Msg>) => setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, ...p } : m)));
+  const patch = (id: Msg["id"], p: Partial<Omit<Msg, "id">>) => setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, ...p } : m)));
 
   useEffect(() => {
     log.current?.scrollTo({ top: log.current.scrollHeight, behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, open, enquiry]);
 
   useEffect(() => {
-    if (open) setTimeout(() => field.current?.focus(), 60);
+    if (!open || !flow || flow.review || enquiry) return;
+    const timer = window.setTimeout(() => field.current?.focus({ preventScroll: true }), 60);
+    return () => window.clearTimeout(timer);
   }, [open, flow, enquiry]);
 
   useEffect(() => {
@@ -85,6 +110,7 @@ export default function ChatWidget() {
   };
 
   const startTransfer = () => {
+    setInput("");
     setEnquiry(false);
     setOpen(true);
     setFlow({ step: 0, data: {} });
@@ -92,40 +118,71 @@ export default function ChatWidget() {
     ask(0);
   };
 
+  const cancelReply = () => {
+    pendingReply.current?.abort();
+    pendingReply.current = null;
+    setBusy(false);
+  };
+
   const reset = () => {
+    if (submitting.current) return;
+    cancelReply();
     setFlow(null);
     setEnquiry(false);
     setInput("");
     history.current = [];
-    setMessages([{ id: nextId++, role: "assistant", text: GREETING, actions: STARTERS }]);
+    setMessages([{ id: "greeting", role: "assistant", text: GREETING, actions: STARTERS }]);
   };
 
   const cancelFlow = () => {
     setFlow(null);
-    push({ role: "assistant", text: "The transfer request was cancelled. Nothing was submitted.", actions: [{ label: "Start again", action: "transfer" }, { label: "Explore services", prompt: "Tell me about your medical transport services" }] });
+    push({ role: "assistant", text: "The transfer request was cancelled.", actions: STARTERS });
   };
 
   const answerStep = (raw: string) => {
-    if (!flow || flow.review) return;
+    if (!flow || flow.review || submitting.current) return;
     const text = raw.trim();
     if (!text) return;
     const step = STEPS[flow.step];
-    push({ role: "user", text });
-
-    if (step.key === "consent" && text.toLowerCase() !== "yes") {
-      setFlow(null);
-      push({ role: "assistant", text: "No problem. I have not submitted the request. You can continue exploring our services.", actions: [{ label: "View services", url: "/services" }] });
-      return;
+    let value = text;
+    if (step.key === "consent") {
+      value = text.toLowerCase();
+      if (value === "no") return cancelFlow();
+      if (value !== "yes") {
+        push({
+          role: "assistant",
+          text: "Choose Yes or No to confirm whether we may contact you.",
+          actions: step.options?.map((option) => ({ label: option, value: option })),
+        });
+        return;
+      }
+    } else {
+      const result = validateEnquiryField(step.key, raw);
+      if (result.value === undefined) {
+        push({ role: "assistant", text: result.error });
+        return;
+      }
+      value = result.value;
     }
 
-    const data = { ...flow.data, [step.key]: text };
+    setInput("");
+    push({ role: "user", text: value });
+    const data = { ...flow.data, [step.key]: value };
     const nextStep = flow.step + 1;
     if (nextStep >= STEPS.length) {
       setFlow({ step: nextStep, data, review: true });
       push({
         role: "assistant",
-        text: `Please review your request:\n\nRoute: ${data.origin} to ${data.destination}\nTiming: ${data.travel_date}\nPreference: ${data.service}\nSupport needs: ${data.patient_needs}\nContact: ${data.name}, ${data.phone}`,
-        actions: [{ label: "Submit request", flow: "submit" }, { label: "Start over", action: "transfer" }, { label: "Cancel", flow: "cancel" }],
+        text: "Review your transfer request",
+        review: [
+          { label: "Pickup location", value: data.from ?? "" },
+          { label: "Drop location", value: data.to ?? "" },
+          { label: "Transfer date", value: formatReviewDate(data.travel_date || "Not sure") },
+          { label: "Support needs", value: data.patient_needs || "Not specified" },
+          { label: "Contact name", value: data.name ?? "" },
+          { label: "Phone number", value: data.phone ?? "" },
+        ],
+        actions: [{ label: "Submit request", flow: "submit" }, { label: "Reset", flow: "restart" }, { label: "Cancel", flow: "cancel" }],
       });
       return;
     }
@@ -133,66 +190,106 @@ export default function ChatWidget() {
     ask(nextStep);
   };
 
-  const sendLead = async (v: Record<string, string>) => {
+  const sendLead = async (values: Partial<Record<EnquiryField | "consent", string>>) => {
     const res = await fetch("/api/enquiry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: v.origin, to: v.destination, service: v.service, name: v.name, phone: v.phone, email: v.email ?? "",
-        notes: [v.travel_date && `Timing: ${v.travel_date}`, v.patient_needs && `Support needs: ${v.patient_needs}`, "Source: Ashoka AI assistant"].filter(Boolean).join("\n"),
-        consent: "yes",
-      }),
+      body: JSON.stringify(values),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || "Unable to send enquiry.");
   };
 
   const submitFlow = async () => {
-    if (!flow) return;
+    if (!flow?.review || submitting.current) return;
+    submitting.current = true;
     const id = push({ role: "assistant", text: "Sending your transfer brief securely…", pending: true });
     try {
-      await sendLead(flow.data as Record<string, string>);
-      patch(id, { pending: false, text: "Your enquiry has been sent. Our coordination team will contact you shortly.", actions: [{ label: "Explore services", url: "/services" }, { label: "Start another request", action: "transfer" }] });
+      await sendLead(flow.data);
+      setFlow((current) => current === flow ? null : current);
+      patch(id, { pending: false, text: "Your enquiry was recorded. Please call our coordination team to confirm next steps.", actions: [{ label: "Start another request", action: "transfer" }] });
     } catch (e) {
-      patch(id, { pending: false, text: e instanceof Error ? e.message : "Unable to send the enquiry. Please call our coordination team." });
+      patch(id, {
+        pending: false,
+        text: e instanceof Error ? e.message : "Unable to send the enquiry. Please call our coordination team.",
+        actions: [
+          { label: "Try again", flow: "submit" },
+          { label: "Reset", flow: "restart" },
+          { label: "Cancel", flow: "cancel" },
+        ],
+      });
+    } finally {
+      submitting.current = false;
     }
-    setFlow(null);
   };
 
   const send = async (raw: string) => {
     const text = raw.trim();
-    if (!text || busy) return;
+    if (!text) return;
+    const urgency = getChatUrgency(text) ?? (
+      flow && STEPS[flow.step]?.key === "travel_date" &&
+      (text === getTransferToday() || /\btoday\b/i.test(text)) ? "urgent" : null
+    );
+    if (urgency) {
+      cancelReply();
+      setMessages((prev) => prev.filter((message) => !message.pending || message.text));
+      setInput("");
+      setFlow(null);
+      setEnquiry(false);
+      push({ role: "user", text });
+      push({
+        role: "assistant",
+        text: getUrgentChatMessage(urgency),
+        actions: urgency === "emergency"
+          ? [{ label: "Call 112 in India", url: "tel:112" }]
+          : [{ label: `Call ${site.phones.emergency.label}`, url: site.phones.emergency.href }],
+      });
+      return;
+    }
+    if (pendingReply.current || flow?.review) return;
     setInput("");
     if (flow) return answerStep(text);
 
     push({ role: "user", text });
     const id = push({ role: "assistant", text: "", pending: true });
+    const controller = new AbortController();
+    pendingReply.current = controller;
     setBusy(true);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
+        signal: controller.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, history: history.current.slice(-6) }),
       });
       const data = await res.json();
-      const actions: Action[] = [...(data.actions ?? [])];
-      if (!actions.some((a) => a.prompt)) actions.push({ label: "Tell me about services", prompt: "Tell me about your medical transport services" });
-      if (!actions.some((a) => a.action === "transfer")) actions.push({ label: "Start a transfer", action: "transfer" });
+      if (controller.signal.aborted) return;
+      const actions: Action[] = data.actions ?? [];
       patch(id, { pending: false, text: data.message || "Please try again or contact our team.", actions });
       if (data.status) history.current.push({ role: "user", text }, { role: "assistant", text: data.message });
     } catch {
-      patch(id, { pending: false, text: "The assistant is temporarily unavailable. Please call or use WhatsApp to reach our team." });
+      if (!controller.signal.aborted) {
+        patch(id, { pending: false, text: "The assistant is temporarily unavailable. Please call our coordination team." });
+      }
     } finally {
-      setBusy(false);
+      if (pendingReply.current === controller) {
+        pendingReply.current = null;
+        setBusy(false);
+      }
     }
   };
 
   const run = (a: Action) => {
+    if (a.prompt) return void send(a.prompt);
+    if (busy || submitting.current) return;
+    if (a.flow === "restart") {
+      reset();
+      return startTransfer();
+    }
     if (a.action === "transfer") return startTransfer();
     if (a.flow === "submit") return void submitFlow();
     if (a.flow === "cancel") return cancelFlow();
     if (a.value) return answerStep(a.value);
-    if (a.prompt) return void send(a.prompt);
   };
 
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -204,25 +301,38 @@ export default function ChatWidget() {
 
   const onEnquiry = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submitting.current) return;
     const form = e.currentTarget;
-    const v = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+    const values = Object.fromEntries(new FormData(form)) as Partial<Record<EnquiryField | "consent", string>>;
+    for (const key of ["from", "to", "travel_date", "patient_needs", "name", "phone", "email"] as const) {
+      const result = validateEnquiryField(key, values[key] ?? "");
+      if (result.value === undefined) {
+        setEnquiryError(result.error);
+        (form.elements.namedItem(key) as HTMLElement | null)?.focus();
+        return;
+      }
+      values[key] = result.value;
+    }
+    submitting.current = true;
     setEnquirySending(true);
     setEnquiryError("");
     try {
-      await sendLead(v);
+      await sendLead(values);
       form.reset();
       setEnquiry(false);
-      push({ role: "assistant", text: "Your enquiry has been sent. Our coordination team will contact you shortly." });
+      push({ role: "assistant", text: "Your enquiry was recorded. Please call our coordination team to confirm next steps." });
     } catch (err) {
       setEnquiryError(err instanceof Error ? err.message : "Unable to send enquiry. Please call our team.");
     } finally {
+      submitting.current = false;
       setEnquirySending(false);
     }
   };
 
   const step = flow && !flow.review ? flow.step : null;
-  const progress = flow ? Math.min(flow.step + 1, STEPS.length) : 0;
-  const inputLocked = !!flow?.review;
+  const pickingTransferDate = step !== null && STEPS[step].key === "travel_date";
+
+  const composerField = "min-h-10 min-w-0 flex-1 rounded-xl border border-line bg-white px-3 py-2 text-sm text-ink caret-brand [color-scheme:light] outline-none focus:border-brand";
   const label = "block text-xs font-medium text-slate";
   const control = "mt-1 w-full rounded border border-line bg-white px-3 py-2 text-sm text-ink outline-none focus:border-brand";
 
@@ -238,56 +348,83 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-16 right-0 flex h-[min(650px,calc(100svh-7rem))] w-[min(390px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_24px_70px_-20px_rgba(16,32,121,0.45)]"
+            className={cn(
+              "flex flex-col overflow-hidden rounded-2xl border border-line bg-white",
+              "absolute bottom-16 right-0 z-10 h-[min(650px,calc(100dvh-6.25rem))] w-[min(390px,calc(100vw-2rem))] shadow-[0_24px_70px_-20px_rgba(16,32,121,0.45)] sm:w-[min(390px,calc(100vw-2.5rem))]",
+              "[@media(max-height:520px)]:fixed [@media(max-height:520px)]:inset-y-2 [@media(max-height:520px)]:right-2 [@media(max-height:520px)]:h-auto [@media(max-height:520px)]:w-[min(390px,calc(100vw-1rem))]",
+            )}
           >
-            <header className="flex items-start justify-between bg-navy p-5 text-white">
-              <div>
-                <span className="flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.1em] text-white/70">
-                  <span className="size-2 rounded-full bg-[#46c77a] shadow-[0_0_0_4px_rgba(70,199,122,0.18)]" /> Ashoka Rescue assistant
+            <header className="flex shrink-0 items-center justify-between gap-2 bg-navy px-4 py-4 text-white [@media(max-height:520px)]:py-2">
+              <div className="min-w-0">
+                <span className="block text-[0.7rem] font-medium uppercase tracking-wider text-white/70 [@media(max-height:520px)]:hidden">
+                  Ashoka Rescue assistant
                 </span>
-                <h2 className="mt-1 font-display text-xl font-bold !text-white">How can we help?</h2>
+                <h2 className="mt-1 font-display text-lg font-bold leading-tight !text-white [@media(max-height:520px)]:mt-0">Patient transfer help</h2>
               </div>
-              <div className="flex gap-1.5">
-                <button type="button" onClick={reset} aria-label="Restart conversation" title="Restart conversation" className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-white/20"><RotateCcw className="size-4" /></button>
+              <div className="flex shrink-0 gap-1.5">
+                <button type="button" onClick={reset} aria-label="Reset conversation" title="Reset conversation" className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-white/20"><RotateCcw className="size-4" /></button>
                 <button type="button" onClick={() => setOpen(false)} aria-label="Close assistant" className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-white/20"><X className="size-4" /></button>
               </div>
             </header>
 
-            <p className="bg-brand-50 px-5 py-2 text-xs text-navy">For an immediate medical emergency, contact local emergency services first.</p>
+            <p className="shrink-0 bg-brand-50 px-4 py-2 text-xs leading-snug text-navy">
+              {emergencyGuidance}{" "}
+              <a href="tel:112" className="font-semibold underline underline-offset-2">Call 112 in India</a>.
+            </p>
 
-            <a href={site.whatsapp} target="_blank" rel="noreferrer" aria-label="Message us on WhatsApp" className="mx-4 mt-3 flex items-center gap-3 rounded-lg border border-line px-3 py-2.5 text-navy transition hover:border-brand">
-              <span className="grid size-8 place-items-center rounded-full bg-brand text-white"><WhatsAppIcon className="size-4" /></span>
-              <span className="flex-1 text-sm leading-tight"><strong className="block font-semibold">24/7 medical assistance</strong><small className="text-slate">{site.phones.emergency.label}</small></span>
-              <ArrowUpRight className="size-4 text-slate" />
-            </a>
+            {flow || enquiry ? (
+              <div className="shrink-0 border-b border-line px-4 py-2">
+                <a
+                  href={site.phones.emergency.href}
+                  className="inline-flex min-h-8 flex-wrap items-center gap-x-2 text-xs font-semibold text-brand underline-offset-2 hover:underline"
+                >
+                  <Phone aria-hidden className="size-3.5 shrink-0" />
+                  <span>Urgent transfer? Call <span className="whitespace-nowrap">{site.phones.emergency.label}</span></span>
+                </a>
+              </div>
+            ) : (
+              <a
+                href={site.phones.emergency.href}
+                className="mx-4 mt-2 flex shrink-0 items-center gap-3 rounded-lg bg-brand px-3 py-2 text-white transition hover:bg-brand-700"
+              >
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/15">
+                  <Phone aria-hidden className="size-4" />
+                </span>
+                <span className="text-sm leading-tight">
+                  <strong className="block font-semibold">Call the 24/7 transfer line</strong>
+                  <span className="mt-0.5 block text-xs text-white/85">{site.phones.emergency.label}</span>
+                </span>
+              </a>
+            )}
 
             {flow && !enquiry && (
-              <div className="px-5 pt-3">
-                <div className="flex justify-between text-xs text-slate"><span>Transfer request</span><strong className="text-navy">Step {progress} of {STEPS.length}</strong></div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-mist"><span className="block h-full rounded-full bg-brand transition-all" style={{ width: `${(progress / STEPS.length) * 100}%` }} /></div>
+              <div className="flex shrink-0 items-center justify-between gap-3 bg-mist px-4 py-2.5 text-xs">
+                <strong className="font-semibold text-navy">
+                  {step === null ? "Review before submitting" : STEPS[step].label}
+                </strong>
+                {step !== null && (
+                  <span className="shrink-0 text-slate">Question {step + 1} of {STEPS.length}</span>
+                )}
               </div>
             )}
 
             {enquiry ? (
-              <form onSubmit={onEnquiry} className="flex-1 space-y-3 overflow-y-auto p-4">
+              <form onSubmit={onEnquiry} className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
                 <div className="flex items-start gap-3">
                   <button type="button" onClick={() => setEnquiry(false)} aria-label="Back to conversation" className="grid size-8 shrink-0 place-items-center rounded-full bg-mist text-navy"><ArrowLeft className="size-4" /></button>
-                  <div className="text-sm"><strong className="block text-navy">Request a callback</strong><span className="text-slate">Share the essentials. Our team will confirm the next step.</span></div>
+                  <div className="text-sm"><strong className="block text-navy">Request a callback</strong><span className="text-slate">Use this form for non-urgent transfers.</span></div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className={label}>From<input name="origin" required maxLength={120} className={control} /></label>
-                  <label className={label}>To<input name="destination" required maxLength={120} className={control} /></label>
+                  <label className={label}>Pickup location<input name="from" required maxLength={enquiryLimits.from} className={control} /></label>
+                  <label className={label}>Drop location<input name="to" required maxLength={enquiryLimits.to} className={control} /></label>
                 </div>
-                <label className={label}>Preferred date or urgency<input name="travel_date" maxLength={80} placeholder="Today, or 24 September" className={control} /></label>
-                <label className={label}>Transport preference
-                  <select name="service" className={control}>{SERVICE_CHOICES.map((o) => <option key={o}>{o}</option>)}</select>
-                </label>
-                <label className={label}>Mobility or support needs<textarea name="patient_needs" rows={2} maxLength={600} placeholder="Only details needed to plan the transfer" className={control} /></label>
+                <label className={label}>Preferred transfer date<input name="travel_date" type="date" min={getTransferToday()} className={control} /></label>
+                <label className={label}>Mobility or support needs<textarea name="patient_needs" rows={2} maxLength={enquiryLimits.patient_needs} placeholder="Only details needed to plan the transfer" className={control} /></label>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className={label}>Your name<input name="name" required maxLength={100} autoComplete="name" className={control} /></label>
-                  <label className={label}>Phone<input name="phone" required maxLength={20} autoComplete="tel" inputMode="tel" className={control} /></label>
+                  <label className={label}>Your name<input name="name" required maxLength={enquiryLimits.name} autoComplete="name" className={control} /></label>
+                  <label className={label}>Phone<input name="phone" type="tel" required maxLength={enquiryLimits.phone} autoComplete="tel" inputMode="tel" className={control} /></label>
                 </div>
-                <label className={label}>Email (optional)<input name="email" type="email" maxLength={150} autoComplete="email" className={control} /></label>
+                <label className={label}>Email (optional)<input name="email" type="email" maxLength={enquiryLimits.email} autoComplete="email" className={control} /></label>
                 <label className="flex items-start gap-2 text-xs text-slate"><input required type="checkbox" name="consent" className="mt-0.5 accent-brand" /> I agree to be contacted about this enquiry.</label>
                 {enquiryError && <p role="alert" className="text-xs text-signal">{enquiryError}</p>}
                 <button type="submit" disabled={enquirySending} className="btn btn-brand w-full !normal-case !tracking-normal disabled:opacity-60">{enquirySending ? "Sending…" : <>Send enquiry <ArrowRight className="size-4" /></>}</button>
@@ -295,15 +432,31 @@ export default function ChatWidget() {
               </form>
             ) : (
               <>
-                <div ref={log} role="log" aria-live="polite" className="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
+                <div ref={log} role="log" aria-live="polite" className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-3 [&>*]:shrink-0">
                   {messages.map((m) => (
                     <div key={m.id} className={cn("flex flex-col gap-2", m.role === "user" ? "items-end" : "items-start")}>
-                      <div className={cn("max-w-[88%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed", m.role === "user" ? "rounded-br-sm bg-brand text-white" : "rounded-bl-sm bg-mist text-ink")}>
-                        {m.pending && !m.text ? (
-                          <span aria-label="Ashoka AI is thinking" className="flex gap-1 py-1">{[0, 1, 2].map((i) => <span key={i} className="size-1.5 animate-bounce rounded-full bg-slate/60" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>
-                        ) : m.text}
-                      </div>
-                      {m.actions && (
+                      {m.review ? (
+                        <div className="w-full min-w-0 rounded-2xl border border-line bg-white text-sm text-ink">
+                          <h3 className="rounded-t-2xl border-b border-line bg-mist px-4 py-3 font-display text-base font-semibold text-navy">
+                            {m.text}
+                          </h3>
+                          <dl className="divide-y divide-line px-4">
+                            {m.review.map(({ label, value }) => (
+                              <div key={label} className="grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)] gap-x-3 py-2.5">
+                                <dt className="text-xs font-medium leading-5 text-slate">{label}</dt>
+                                <dd className="whitespace-pre-line font-medium leading-5 [overflow-wrap:anywhere]">{value}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        </div>
+                      ) : (
+                        <div className={cn("min-w-0 max-w-[88%] whitespace-pre-line [overflow-wrap:anywhere] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed", m.role === "user" ? "rounded-br-sm bg-brand text-white" : "rounded-bl-sm bg-mist text-ink")}>
+                          {m.pending && !m.text ? (
+                            <span aria-label="Ashoka AI is thinking" className="flex gap-1 py-1">{[0, 1, 2].map((i) => <span key={i} className="size-1.5 animate-bounce rounded-full bg-slate/60" style={{ animationDelay: `${i * 0.15}s` }} />)}</span>
+                          ) : m.text}
+                        </div>
+                      )}
+                      {m.actions && (!flow || m.id === messages.at(-1)?.id) && (
                         <div className="flex max-w-full flex-wrap gap-2">
                           {m.actions.map((a, i) =>
                             a.url ? (
@@ -321,25 +474,45 @@ export default function ChatWidget() {
                     </div>
                   ))}
                   {!flow && (
-                    <button type="button" onClick={() => setEnquiry(true)} className="mt-1 self-start text-xs font-medium text-brand underline-offset-2 hover:underline">Prefer a callback? Request one</button>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                      <button type="button" onClick={() => setEnquiry(true)} className="min-h-9 text-xs font-medium text-brand underline-offset-2 hover:underline">
+                        Request a callback
+                      </button>
+                      <button type="button" disabled={busy} onClick={() => void send(BROWSE_PROMPT)} className="min-h-9 text-xs font-medium text-brand underline-offset-2 hover:underline disabled:opacity-50">
+                        Browse services
+                      </button>
+                    </div>
                   )}
                 </div>
 
-                <form onSubmit={(e) => { e.preventDefault(); void send(input); }} className="flex items-end gap-2 border-t border-line p-3">
-                  <label htmlFor="ai-concierge-message" className="sr-only">Message</label>
-                  <textarea
-                    ref={field}
-                    id="ai-concierge-message"
-                    rows={1}
-                    maxLength={1000}
-                    value={input}
-                    disabled={inputLocked}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={onKey}
-                    placeholder={step !== null ? `Reply about ${STEPS[step].key.replace("_", " ")}…` : "Ask about a service or transfer…"}
-                    className="max-h-24 min-h-10 flex-1 resize-none rounded-xl border border-line px-3 py-2 text-sm outline-none focus:border-brand disabled:bg-mist"
-                  />
-                  <button type="submit" disabled={inputLocked || busy || !input.trim()} aria-label="Send message" className="grid size-10 shrink-0 place-items-center rounded-full bg-brand text-white transition hover:bg-brand-700 disabled:opacity-50"><Send className="size-4" /></button>
+                <form onSubmit={(e) => { e.preventDefault(); void send(input); }} className="flex shrink-0 items-end gap-2 border-t border-line p-3 [@media(max-height:520px)]:p-2">
+                  <label htmlFor="ai-concierge-message" className="sr-only">
+                    {pickingTransferDate ? "Preferred transfer date" : "Message"}
+                  </label>
+                  {pickingTransferDate ? (
+                    <input
+                      id="ai-concierge-message"
+                      type="date"
+                      min={getTransferToday()}
+                      required
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      className={cn(composerField, "w-0")}
+                    />
+                  ) : (
+                    <textarea
+                      ref={field}
+                      id="ai-concierge-message"
+                      rows={1}
+                      maxLength={1000}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={onKey}
+                      placeholder={step !== null ? "Type your answer…" : "Tell us what help you need…"}
+                      className={cn(composerField, "max-h-24 resize-none placeholder:text-slate placeholder:opacity-100")}
+                    />
+                  )}
+                  <button type="submit" disabled={!input.trim() || ((busy || flow?.review) && !getChatUrgency(input))} aria-label={pickingTransferDate ? "Confirm transfer date" : "Send message"} className="grid size-10 shrink-0 place-items-center rounded-full bg-brand text-white transition hover:bg-brand-700 disabled:opacity-50"><Send className="size-4" /></button>
                 </form>
               </>
             )}

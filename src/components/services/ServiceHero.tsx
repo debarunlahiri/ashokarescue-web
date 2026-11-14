@@ -11,7 +11,7 @@ export default function ServiceHero({ service }: { service: Service }) {
   const titleLines = Array.isArray(service.hero.title) ? service.hero.title : [service.hero.title];
 
   return (
-    <section className="under-nav relative isolate flex min-h-[520px] items-end overflow-hidden bg-navy-900 pb-14 pt-28 text-white md:min-h-[600px] md:pb-20 lg:pt-44">
+    <section className="relative isolate flex min-h-[520px] items-end overflow-hidden bg-navy-900 pb-14 pt-28 text-white md:min-h-[600px] md:pb-20 lg:pt-44">
       <Image src={service.image.src} alt={service.image.alt} fill priority sizes="100vw" className="-z-10 object-cover opacity-70" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-900/90 via-navy-900/65 to-navy-900/20" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-navy-900/80 to-transparent" />

@@ -42,7 +42,7 @@ export default function HeroCarousel() {
     <section
       aria-roledescription="carousel"
       aria-label="Ashoka Rescue highlights"
-      className="under-nav relative isolate h-[640px] w-full overflow-hidden bg-navy-900 text-white md:aspect-[1600/854] md:h-auto md:max-h-[940px] md:min-h-[640px]"
+      className="relative isolate h-[640px] w-full overflow-hidden bg-navy-900 text-white md:aspect-[1600/854] md:h-auto md:max-h-[940px] md:min-h-[640px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}

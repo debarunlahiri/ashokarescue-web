@@ -6,8 +6,9 @@
   --font-display: "Exo 2 Variable", "Exo 2", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Rubik Variable", "Rubik", ui-sans-serif, system-ui, sans-serif;
 
-  /* Single brand blue taken from the logo: #102079. */
+  /* Primary blue taken from the Ashoka Rescue logo. */
   --color-brand: #102079;
+  --color-brand-500: #23399a;
   --color-brand-600: #102079;
   --color-brand-700: #0b1760;
   --color-brand-50: #e8ebf8;
@@ -27,8 +28,12 @@
 
 @layer base {
   :root {
-    --nav-h: 5.75rem;
-    --header-h: 4.5rem;
+    --nav-h: 4.75rem;
+  }
+  @media (min-width: 1024px) {
+    :root {
+      --nav-h: 6rem;
+    }
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]) {
@@ -53,8 +58,8 @@
     color: var(--color-navy);
   }
   ::selection {
-    background: var(--color-brand);
-    color: var(--color-navy);
+    background: var(--color-float);
+    color: var(--color-paper);
   }
   :focus-visible {
     outline: 2px solid var(--color-brand);
@@ -82,13 +87,6 @@
   @media (min-width: 768px) {
     .section {
       padding-block: 6rem;
-    }
-  }
-
-  /* Pulls a page's first section up behind the floating desktop nav card. */
-  @media (min-width: 1024px) {
-    .under-nav {
-      margin-top: calc(var(--nav-h) / -2);
     }
   }
 
@@ -173,16 +171,6 @@
     outline: none;
     border-color: var(--color-brand);
     box-shadow: 0 0 0 3px rgb(16 32 121 / 0.15);
-  }
-
-  /* Solid saw-tooth edge in the current text colour: <span class="zigzag text-navy" />. */
-  .zigzag {
-    display: block;
-    height: 12px;
-    background: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='black'/%3E%3C/svg%3E") repeat-x left bottom / 24px 12px;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='black'/%3E%3C/svg%3E") repeat-x left bottom / 24px 12px;
-    transition: color 0.3s;
   }
 
   .prose-ar p {

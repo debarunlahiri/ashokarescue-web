@@ -1,4 +1,5 @@
 import { faqs, services, site } from "@/data";
+import { getChatUrgency, getUrgentChatMessage } from "@/lib/chat-urgency";
 
 export type ChatAction = { label: string; url?: string; action?: "transfer"; prompt?: string };
 export type ChatReply = { message: string; actions: ChatAction[]; mode?: string; urgent?: boolean; source?: string };
@@ -40,15 +41,15 @@ Published website facts:
 - A charter air ambulance can typically carry two family attendants, subject to aircraft, route, equipment, and case requirements.
 - Bed-to-bed service coordinates the connected journey from the current bed to the destination bed using the required ground and air or rail services.
 
-For a transfer enquiry, collect only what is needed: origin, destination, preferred date or urgency, service preference, the patient's mobility or current support needs, hospital details when relevant, and the caller's name and phone or email.
+For a transfer enquiry, collect only what is needed: pickup location, drop location, preferred date or urgency, the patient's mobility or current support needs, hospital details when relevant, and the caller's name and phone or email.
 
-Never diagnose, interpret symptoms, determine fitness to travel, recommend treatment, guarantee availability, or quote a price. For an immediate or life-threatening situation, tell the visitor to contact local emergency services first and offer Ashoka Rescue's emergency desk at ${site.phones.emergency.label}.`;
+Never diagnose, interpret symptoms, determine fitness to travel, recommend treatment, guarantee availability, or quote a price. For an immediate or life-threatening situation, tell the visitor to contact local emergency services first.`;
 
 export const SYSTEM_INSTRUCTION = `You are the Ashoka Rescue transfer concierge. Answer only from the approved knowledge supplied below. Be calm, concise, and practical. Use no more than 90 words unless a short list is genuinely clearer.
 
-You are not a doctor. Do not diagnose, give treatment advice, assess fitness to travel, interpret symptoms, promise a price or availability, or invent service capabilities. If asked for any of those, explain that the coordination or medical team must confirm it. If the message suggests immediate danger, tell the visitor to contact local emergency services now, then provide the emergency-desk number ${site.phones.emergency.label}.
+You are not a doctor. Do not diagnose, give treatment advice, assess fitness to travel, interpret symptoms, promise a price or availability, or invent service capabilities. If asked for any of those, explain that the coordination or medical team must confirm it. If the message suggests immediate danger, tell the visitor to contact local emergency services now. In India, the emergency number is 112.
 
-When the visitor wants to arrange a transfer, ask for one or two missing details at a time. Do not ask for full medical records or identity documents. Encourage them to use the secure enquiry form in the assistant when enough details are available.`;
+When the visitor wants to arrange a transfer, ask for one or two missing details at a time. Only list services or compare transport options when the visitor asks to explore them. Do not ask for full medical records or identity documents. Offer the enquiry form for planned transfers. Direct urgent transfer requests to the 24/7 coordination line.`;
 
 function serviceKnowledge(): string {
   return services
@@ -65,13 +66,13 @@ function navigationActions(message: string): ChatAction[] {
   if (/\b(how.*work|process|steps|arrange)\b/.test(m)) {
     return [{ label: "Start transfer request", action: "transfer" }, { label: "Read FAQs", url: "/faqs" }, { label: "Contact the team", url: "/contact" }];
   }
-  if (/\b(service|option|what do you|explore|transport)\b/.test(m)) {
+  if (/\b(services?|options?|what do you|explore)\b/.test(m)) {
     return [serviceAction(SERVICE_TOPICS[1]), serviceAction(SERVICE_TOPICS[2]), serviceAction(SERVICE_TOPICS[4]), { label: "View all services", url: "/services" }];
   }
   if (/\b(transfer|book|patient|quote|price|cost)\b/.test(m)) {
-    return [{ label: "Start transfer request", action: "transfer" }, { label: "View services", url: "/services" }];
+    return [{ label: "Start transfer request", action: "transfer" }];
   }
-  return [{ label: "Explore services", url: "/services" }, { label: "Start transfer request", action: "transfer" }];
+  return [{ label: "Start transfer request", action: "transfer" }];
 }
 
 function allServiceActions(): ChatAction[] {
@@ -87,7 +88,7 @@ function websiteAnswer(message: string): ChatReply | null {
   const m = message.toLowerCase();
   const transfer: ChatAction = { label: "Start transfer request", action: "transfer" };
 
-  if (/\b(coma|unconscious)\b/.test(m)) {
+  if (/\bcoma\b/.test(m)) {
     return {
       message: "Ashoka Rescue states that it transports ICU and coma patients, including patients with brain haemorrhage or hypoxic brain injury. The team first reviews vital stability, haemoglobin, oxygen requirements, and the treating doctor’s information before deciding whether air ambulance or a commercial stretcher with medical escort may be appropriate. Final fitness and transport decisions are confirmed by the medical team.",
       actions: [{ label: "Read the FAQs", url: "/faqs" }, { label: "Discuss this transfer", action: "transfer" }],
@@ -209,10 +210,20 @@ async function askGemini(message: string, history: HistoryItem[]): Promise<strin
   }
 }
 
-const EMERGENCY = /\b(not breathing|unconscious|cardiac arrest|severe bleeding|cannot breathe|can.t breathe|life[ -]threatening|emergency now)\b/i;
 const SERVICE_LIST = /\b(all|your|show|list|available|offer|provide|explore)\b.*\b(service|services|options)\b|\b(service|services|options)\b.*\b(all|your|show|list|available|offer|provide|explore)\b/i;
 
 export async function answer(message: string, history: HistoryItem[]): Promise<ChatReply> {
+  const urgency = getChatUrgency(message);
+  if (urgency) {
+    return {
+      message: getUrgentChatMessage(urgency),
+      urgent: true,
+      actions: urgency === "emergency"
+        ? [{ label: "Call 112 in India", url: "tel:112" }]
+        : [{ label: `Call ${site.phones.emergency.label}`, url: site.phones.emergency.href }],
+    };
+  }
+
   if (SERVICE_LIST.test(message)) {
     return {
       message: "Here are the medical transport services currently listed on the Ashoka Rescue website. Select any service to open its details, or choose “Help me choose” to start a guided transfer request.",
@@ -221,11 +232,11 @@ export async function answer(message: string, history: HistoryItem[]): Promise<C
     };
   }
 
-  if (EMERGENCY.test(message)) {
+  if (/\b(?:i need|i want|help me)\b.*\b(?:transfer|transport)\b|\b(?:arrange|book|request|plan) (?:a |an |my |the )?(?:patient )?transfer\b/i.test(message)) {
     return {
-      message: `This may need immediate emergency help. Contact your local emergency services now. You can also call the Ashoka Rescue emergency desk at ${site.phones.emergency.label}.`,
-      urgent: true,
-      actions: [{ label: "Call emergency desk", url: site.phones.emergency.href }],
+      message: "I can help you prepare a transfer request. Start with the pickup location, drop location and preferred date.",
+      actions: [{ label: "Plan a transfer", action: "transfer" }],
+      mode: "guided",
     };
   }
 

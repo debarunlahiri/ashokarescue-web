@@ -1,5 +1,4 @@
-import type { IconKey } from "@/types";
-import type { HeroSlide, MapCity, Stat } from "@/types";
+import type { HeroSlide, IconKey, MapCity, Stat } from "@/types";
 import { images } from "./images";
 
 // Content sourced from the Ashoka Rescue website.
@@ -7,46 +6,52 @@ export const heroSlides: HeroSlide[] = [
   {
     image: images.hero.beyondBorders,
     eyebrow: "Ashoka Rescue / Beyond borders",
-    title: ["Team Ashoka will transfer your patient beyond borders."],
-    text: "Safe. Careful. Compassionate.",
+    title: ["International patient transfers"],
+    text: "Medical transport support for patients travelling abroad.",
     hasBakedText: true,
   },
   {
     image: images.hero.cabinCare,
     eyebrow: "Ashoka Rescue / Medical transport",
-    title: ["Medical transport.", "Care at every step."],
-    text: "Bedside-to-bedside transfers in India and worldwide.",
+    title: ["Coordinated medical transport"],
+    text: "Patient transfers within India and internationally.",
   },
   {
     image: images.hero.inflightMonitoring,
     eyebrow: "Ashoka Rescue / Air ambulance",
-    title: ["Dedicated aircraft.", "Focused on care."],
-    text: "Charter air ambulances with ICU-level crew and equipment.",
+    title: ["Charter air ambulance services"],
+    text: "Dedicated aircraft with critical care teams and ICU equipment.",
   },
   {
     image: images.hero.tarmacTransfer,
     eyebrow: "Ashoka Rescue / Road ambulance",
-    title: ["Every connection.", "Cared for."],
+    title: ["Road ambulance services"],
     text: "ALS and BLS road ambulances for hospital and airport transfers.",
   },
   {
     image: images.hero.expertPanel,
     eyebrow: "Our expert panel of doctors",
-    title: ["Our Expert Panel of Doctors"],
+    title: ["Our medical team"],
     text: "Medical leadership with first-hand experience of caring for patients in transit.",
     hasBakedText: true,
   },
 ];
 
 export const home = {
-  quickCta: {
-    title: "Need a patient transfer?",
-    text: ["Tell us where you are.", "We’ll help plan what comes next."],
+  transferContacts: {
+    urgent: {
+      title: "24/7 transfer line",
+      text: "Call this number if a patient needs an urgent transfer. Our team will discuss the transport options available.",
+    },
+    planned: {
+      title: "Request a quote",
+      text: "For a planned transfer, send us the pickup location, drop location and preferred travel date on WhatsApp.",
+    },
   },
   services: {
     eyebrow: "Our services",
-    title: ["The right transport.", "The right medical support."],
-    text: "From a dedicated aircraft to a supported airline journey, find the right starting point for your transfer.",
+    title: ["Medical transport options"],
+    text: "Compare dedicated air ambulances, commercial stretcher services, medical escorts and road ambulances.",
     items: [
       {
         title: "Charter air ambulance",
@@ -80,16 +85,16 @@ export const home = {
   },
   patientFirst: {
     eyebrow: "Patient-first care",
-    title: ["Every patient deserves", "personal attention."],
-    quote: "A patient. A family. A moment that matters.",
-    text: "Medical transport is about more than reaching a destination. It means understanding the patient’s needs, keeping the family informed and making sure each stage of the journey connects.",
+    title: ["Medical support during transport"],
+    quote: "Care planned around the patient",
+    text: "We review the patient’s medical needs, coordinate each stage of the transfer and keep families informed.",
     highlights: [
-      { icon: "plane", title: "ICU-Equipped Air Ambulance", text: "Fully equipped aircraft with advanced life-support systems for critical patient transfer." },
-      { icon: "team", title: "Expert Medical Team", text: "Experienced doctors, nurses and paramedics ensuring safe and continuous medical care." },
-      { icon: "globe", title: "International Patient Transfers", text: "Safe and compliant medical transportation across India and to/from USA, Canada, Australia and other countries." },
-      { icon: "support", title: "End-to-End Medical Support", text: "Complete assistance with medical clearance, flight coordination, hospital arrangements and all transfer formalities." },
-      { icon: "stretcher", title: "Commercial Stretcher Services", text: "Specialised stretcher arrangements with medical support on commercial flights." },
-      { icon: "clock", title: "24/7 Assistance & Coordination", text: "Round-the-clock support for enquiries, medical updates and quick transfer arrangements." },
+      { icon: "plane", title: "ICU-equipped air ambulance", text: "Fully equipped aircraft with advanced life-support systems for critical patient transfer." },
+      { icon: "team", title: "Experienced medical team", text: "Doctors, nurses and paramedics provide medical care during transport." },
+      { icon: "globe", title: "International patient transfers", text: "Medical transport within India and internationally, including to and from the United States, Canada and Australia." },
+      { icon: "support", title: "Transfer coordination", text: "Complete assistance with medical clearance, flight coordination, hospital arrangements and all transfer formalities." },
+      { icon: "stretcher", title: "Commercial stretcher services", text: "Specialised stretcher arrangements with medical support on commercial flights." },
+      { icon: "clock", title: "24/7 assistance", text: "Our coordination team is available around the clock to answer enquiries and discuss transfer arrangements." },
     ],
     points: [
       {
@@ -97,61 +102,75 @@ export const home = {
         text: "Transport planning begins with the patient’s condition and treating team.",
       },
       {
-        title: "Joined-up arrangements",
+        title: "Coordinated transport",
         text: "Aircraft, ground connections and receiving teams coordinated together.",
       },
     ],
   },
   journey: {
-    eyebrow: "Bedside to bedside",
-    title: ["One journey.", "Every leg coordinated."],
-    description: "How a typical transfer works: we collect the patient from their hospital bed, drive them to the aircraft, fly them with a medical crew, and drive them on to the receiving hospital.",
+    eyebrow: "Patient transfer process",
+    title: ["What to expect during an air ambulance transfer"],
+    description: "A typical air ambulance transfer combines ground transport, in-flight medical care and handover to the receiving team.",
     stages: [
-      { title: "Bedside pickup", text: "Our team wheels the patient out of the ward on a stretcher and loads them into the ambulance." },
-      { title: "Road to the airport", text: "An ICU ambulance drives to the aircraft, where the patient is boarded by stretcher." },
-      { title: "In the air", text: "The flight, with a critical-care team monitoring throughout." },
-      { title: "On landing", text: "The patient is moved straight from the aircraft into a waiting ambulance." },
-      { title: "Bedside handover", text: "We wheel the patient into the receiving hospital and hand over to their team." },
+      {
+        title: "Pickup location",
+        text: "The medical team prepares the patient for transfer and assists with boarding the ambulance.",
+      },
+      {
+        title: "Transfer to the airport",
+        text: "The ambulance takes the patient to the aircraft, where the crew assists with boarding.",
+      },
+      {
+        title: "In-flight medical care",
+        text: "The medical team monitors the patient and provides care throughout the flight.",
+      },
+      {
+        title: "Ground transfer on arrival",
+        text: "An ambulance meets the aircraft and takes the patient to the receiving facility.",
+      },
+      {
+        title: "Drop location",
+        text: "The medical team hands over care to the receiving facility.",
+      },
     ],
   },
   howItWorks: {
     eyebrow: "How it works",
-    title: ["A clear plan.", "From your first call to arrival."],
+    title: ["How to arrange a patient transfer"],
     steps: [
       {
-        title: "Talk to us",
-        text: "Share the pickup location, destination and the kind of support the patient needs.",
+        title: "Share the transfer details",
+        text: "Provide the pickup location, drop location and the patient’s transport needs.",
       },
       {
         title: "Review the options",
         text: "Our team reviews the medical requirements and discusses suitable transport arrangements.",
       },
       {
-        title: "Connect the journey",
-        text: "Medical clearances, travel arrangements and ground connections are coordinated.",
+        title: "Coordinate the transfer",
+        text: "Our team coordinates medical clearances, travel arrangements and ground transport.",
       },
       {
-        title: "Continue the care",
-        text: "The transfer is supported through to the receiving team and destination handover.",
+        title: "Confirm the handover",
+        text: "The transport team coordinates handover with the receiving medical team.",
       },
     ],
   },
   reach: {
     eyebrow: "Our reach",
-    title: ["Care that goes", "the distance."],
-    text: "Within India or across countries, our team helps connect the medical and travel arrangements for each patient’s route.",
+    title: ["Domestic and international transfers"],
+    text: "Our team coordinates medical care and travel arrangements for each patient transfer.",
     cards: [
       {
-        title: ["City to city.", "Bedside to bedside."],
+        title: "Transfers within India",
         text: "Air and ground medical transport with connected hospital and airport transfers.",
       },
       {
-        title: ["Different countries.", "One coordinated journey."],
+        title: "International transfers",
         text: "Medical escorts, commercial stretchers and charter arrangements, subject to route and medical approvals.",
       },
     ],
   },
-  closing: ["Wherever the next step takes you,", "let’s take it together."],
 };
 
 export const stats: Stat[] = [

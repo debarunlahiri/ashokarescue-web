@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { images } from "@/data";
+import { images, site } from "@/data";
 import { cn } from "@/lib/utils";
 
 type LogoProps = {
@@ -9,12 +9,18 @@ type LogoProps = {
   imageClassName?: string;
   /** "light" is for dark backgrounds (footer). */
   tone?: "dark" | "light";
+  showWordmark?: boolean;
 };
 
-export default function Logo({ className, imageClassName, tone = "dark" }: LogoProps) {
+export default function Logo({
+  className,
+  imageClassName,
+  tone = "dark",
+  showWordmark = false,
+}: LogoProps) {
   const isLight = tone === "light";
   return (
-    <Link href="/" className={cn("flex items-center gap-3", className)} aria-label="Ashoka Rescue — home">
+    <Link href="/" className={cn("flex items-center gap-3", className)} aria-label={`${site.name} home`}>
       <Image
         src={images.brand.logo.src}
         alt={images.brand.logo.alt}
@@ -22,18 +28,22 @@ export default function Logo({ className, imageClassName, tone = "dark" }: LogoP
         height={240}
         priority
         unoptimized
-        className={cn("size-12 shrink-0 object-contain md:size-16", isLight && "rounded bg-white p-1", imageClassName)}
+        className={cn(
+          "shrink-0 object-contain",
+          imageClassName ?? "size-12 md:size-16",
+          isLight && "rounded bg-white p-1",
+        )}
       />
-      {/* Wordmark ("Ashoka Rescue / Air Ambulance Services") commented out:
-      <span className="leading-none">
-        <span className={cn("block font-display text-[1.35rem] font-extrabold uppercase tracking-tight md:text-[1.7rem]", isLight ? "text-white" : "text-navy")}>
-          Ashoka Rescue
+      {showWordmark && (
+        <span className="whitespace-nowrap">
+          <span className={cn("block font-display text-lg font-bold leading-tight", isLight ? "text-white" : "text-navy")}>
+            {site.name}
+          </span>
+          <span className={cn("block text-xs leading-tight", isLight ? "text-white/80" : "text-slate")}>
+            Air Ambulance Services
+          </span>
         </span>
-        <span className={cn("mt-1 block text-[0.6rem] font-medium uppercase tracking-[0.3em] md:text-[0.68rem]", isLight ? "text-white/70" : "text-navy/70")}>
-          Air Ambulance Services
-        </span>
-      </span>
-      */}
+      )}
     </Link>
   );
 }

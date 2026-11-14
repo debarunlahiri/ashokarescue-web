@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Page not found | Ashoka Rescue", rob
 
 export default function NotFound() {
   return (
-    <section className="under-nav relative flex min-h-[70svh] items-center overflow-hidden bg-mist py-24 lg:pt-32">
+    <section className="relative flex min-h-[70svh] items-center overflow-hidden bg-mist py-24 lg:pt-32">
       <div aria-hidden className="absolute -right-24 -top-24 size-[420px] rounded-full bg-brand/10" />
       <div className="container-x relative text-center">
         <EcgLine className="mx-auto" animated />

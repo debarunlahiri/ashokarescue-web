@@ -29,6 +29,10 @@ export const images = {
       src: "/images/company/certificate-of-incorporation.jpg",
       alt: "Certificate of incorporation of Ashoka Rescue Air Ambulance Services Pvt. Ltd.",
     },
+    certificateThumbnail: {
+      src: "/images/company/certificate-thumbnail.webp",
+      alt: "Certificate of incorporation of Ashoka Rescue Air Ambulance Services Pvt. Ltd.",
+    },
   },
   airAmbulance: {
     tarmacConvoy: {

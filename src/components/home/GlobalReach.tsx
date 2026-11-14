@@ -18,9 +18,7 @@ export default function GlobalReach() {
           {cards.map((card, i) => (
             <Reveal key={card.text} delay={i * 0.08} className="card border-l-4 border-brand p-8 md:p-10">
               <h3 className="font-display text-2xl font-bold leading-tight md:text-3xl">
-                {card.title[0]}
-                <br />
-                <span className="text-brand-600">{card.title[1]}</span>
+                {card.title}
               </h3>
               <p className="mt-4 leading-relaxed text-slate">{card.text}</p>
             </Reveal>

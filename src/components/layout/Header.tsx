@@ -1,43 +1,47 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ChevronDown, Mail, MapPin, Menu, Phone, X, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/icons";
 import { Logo } from "@/components/ui";
-import { images, navigation, site } from "@/data";
+import { navigation, site } from "@/data";
 import { setScrollLocked } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import MegaMenu from "./MegaMenu";
 import MobileMenu from "./MobileMenu";
 
-function InfoItem({ icon: Icon, label, value, href, external }: { icon: LucideIcon; label: string; value: string; href: string; external?: boolean }) {
+type InfoItemProps = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href: string;
+  showLabel?: boolean;
+  external?: boolean;
+};
+
+function InfoItem({ icon: Icon, label, value, href, showLabel, external }: InfoItemProps) {
   return (
-    <a href={href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})} className="group flex items-start gap-2.5">
-      <Icon className="mt-1 size-4 shrink-0 text-navy transition-colors group-hover:text-brand" />
-      <span>
-        <span className="block text-sm text-slate">{label}</span>
-        <span className="block font-display text-[1.05rem] font-semibold leading-snug text-navy transition-colors group-hover:text-brand-600">{value}</span>
-      </span>
+    <a
+      href={href}
+      aria-label={`${label}: ${value}`}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+      className="flex items-center gap-1.5 whitespace-nowrap py-2 text-xs leading-tight text-white hover:underline focus-visible:outline-white"
+    >
+      <Icon aria-hidden className="size-3.5 shrink-0" />
+      {showLabel && <span>{label}</span>}
+      <span>{value}</span>
     </a>
   );
 }
 
 export default function Header() {
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMegaOpen, setIsMegaOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 140);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -58,105 +62,121 @@ export default function Header() {
 
   return (
     <>
-      {/* Logo + contact details. Sticks on mobile (where it carries the menu button); scrolls away on desktop. */}
-      <div className="z-50 border-b border-line bg-white max-lg:sticky max-lg:top-0 lg:border-0">
-        <div className="container-x flex h-16 items-center justify-between lg:h-[8.25rem]">
-          <Logo imageClassName="size-14 lg:size-[6.75rem]" />
-
-          <div className="hidden items-start gap-10 lg:flex xl:gap-16">
-            <InfoItem icon={Phone} label="Emergency 24/7" value={site.phones.emergency.label} href={site.phones.emergency.href} />
-            <InfoItem icon={Mail} label="Email Address" value={site.email} href={`mailto:${site.email}`} />
-            <InfoItem icon={MapPin} label="Location" value="Gurugram, Haryana" href={site.address.mapUrl} external />
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="grid size-11 place-items-center rounded bg-brand text-white lg:hidden"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMenuOpen}
-          >
-            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+      <div className="hidden bg-[#F44336] lg:block">
+        <div className="container-x flex items-center justify-end gap-6">
+          <InfoItem
+            icon={Phone}
+            label="24/7 emergency line"
+            value={site.phones.emergency.label}
+            href={site.phones.emergency.href}
+            showLabel
+          />
+          <InfoItem
+            icon={Mail}
+            label="Email"
+            value={site.email}
+            href={`mailto:${site.email}`}
+          />
+          <InfoItem
+            icon={MapPin}
+            label="Office location"
+            value="Gurugram, Haryana"
+            href={site.address.mapUrl}
+            external
+          />
         </div>
       </div>
 
-      {/* Floating nav card; becomes a full-width white bar once scrolled. */}
-      <div
-        className={cn(
-          "sticky top-0 z-50 hidden transition-[background,box-shadow] duration-300 lg:block",
-          isScrolled ? "bg-brand shadow-[0_8px_30px_-14px_rgba(16,32,121,0.35)]" : "bg-[linear-gradient(to_bottom,#fff_50%,transparent_50%)]",
-        )}
-      >
+      <header className="sticky top-0 z-50 bg-brand shadow-[0_8px_30px_-14px_rgba(16,32,121,0.35)]">
         <div className="container-x">
-          <nav
-            aria-label="Main"
-            className={cn("relative flex h-[var(--nav-h)] items-center justify-between bg-brand px-8 transition-shadow duration-300", !isScrolled && "shadow-[0_14px_40px_-16px_rgba(16,32,121,0.3)]")}
-            onMouseLeave={() => setIsMegaOpen(false)}
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
-            }}
-          >
-            <div className="flex items-center gap-8 xl:gap-10">
-            {/* Once the logo strip has scrolled away, keep the logo mark (icon only, no wordmark) in the bar. */}
-            <AnimatePresence initial={false}>
-              {isScrolled && (
-                <motion.div
-                  key="bar-logo"
-                  initial={{ opacity: 0, x: -24, scale: 0.6 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -24, scale: 0.6 }}
-                  transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="-ml-4 shrink-0"
-                >
-                  <Link href="/" aria-label="Ashoka Rescue — home" className="block py-2 transition-transform duration-300 hover:scale-105">
-                    <Image src={images.brand.logo.src} alt={images.brand.logo.alt} width={160} height={160} unoptimized className="size-[4.75rem] rounded-sm object-contain" />
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <ul className="flex items-center gap-8 xl:gap-10">
-              {navigation.map((item) => {
-                const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-                const isServices = item.href === "/services";
-                const className = cn(
-                  "flex items-center gap-1 py-6 font-display text-[1.02rem] font-semibold transition-colors",
-                  isActive ? "text-white" : "text-white/80 hover:text-white",
-                );
-                return (
-                  <li key={item.href}>
-                    {item.external ? (
-                      <a href={item.href} target="_blank" rel="noreferrer" className={className} onMouseEnter={() => setIsMegaOpen(false)}>
-                        {item.label} <ArrowUpRight className="size-3.5" />
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className={className}
-                        onMouseEnter={() => setIsMegaOpen(isServices)}
-                        onFocus={() => setIsMegaOpen(isServices)}
-                        aria-haspopup={isServices || undefined}
-                        aria-expanded={isServices ? isMegaOpen : undefined}
-                      >
-                        {item.label}
-                        {isServices && <ChevronDown className={cn("size-4 transition-transform", isMegaOpen && "rotate-180")} />}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-            </div>
+          <div className="relative flex h-[var(--nav-h)] items-center justify-between gap-4 lg:px-5 xl:px-8">
+            <Logo
+              className="shrink-0 focus-visible:outline-white"
+              imageClassName="size-14 lg:size-[4.5rem]"
+              tone="light"
+              showWordmark
+            />
 
-            <a href={site.whatsapp} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2.5 rounded bg-white px-6 font-display text-[0.95rem] font-semibold text-brand transition-colors hover:bg-brand-50">
+            <nav
+              aria-label="Main"
+              className="hidden h-full lg:flex lg:items-center"
+              onMouseLeave={() => setIsMegaOpen(false)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setIsMegaOpen(false);
+              }}
+            >
+              <ul className="flex items-center gap-4 xl:gap-7">
+                {navigation.map((item) => {
+                  const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                  const isServices = item.href === "/services";
+                  const className = cn(
+                    "flex items-center gap-1 py-5 font-display text-[0.95rem] font-semibold transition-colors focus-visible:outline-white xl:text-base",
+                    isActive ? "text-white" : "text-white/80 hover:text-white",
+                  );
+
+                  return (
+                    <li key={item.href}>
+                      {item.external ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={className}
+                          onMouseEnter={() => setIsMegaOpen(false)}
+                        >
+                          {item.label}
+                          <ArrowUpRight aria-hidden className="size-3.5" />
+                        </a>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className={className}
+                          onMouseEnter={() => setIsMegaOpen(isServices)}
+                          onFocus={() => setIsMegaOpen(isServices)}
+                          aria-current={pathname === item.href ? "page" : undefined}
+                          aria-haspopup={isServices || undefined}
+                          aria-expanded={isServices ? isMegaOpen : undefined}
+                        >
+                          {item.label}
+                          {isServices && (
+                            <ChevronDown
+                              aria-hidden
+                              className={cn("size-4 transition-transform", isMegaOpen && "rotate-180")}
+                            />
+                          )}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
+            </nav>
+
+            <a
+              href={site.whatsapp}
+              target="_blank"
+              rel="noreferrer"
+              onMouseEnter={() => setIsMegaOpen(false)}
+              className="hidden h-10 shrink-0 items-center gap-2 rounded bg-white px-4 font-display text-sm font-semibold text-brand transition-colors hover:bg-brand-50 focus-visible:outline-white lg:inline-flex xl:px-5"
+            >
               <WhatsAppIcon className="size-5" />
               Request assistance
             </a>
 
-            <AnimatePresence>{isMegaOpen && <MegaMenu />}</AnimatePresence>
-          </nav>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              className="grid size-11 place-items-center rounded border border-white/30 text-white hover:bg-white/10 focus-visible:outline-white lg:hidden"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
       <AnimatePresence>{isMenuOpen && <MobileMenu />}</AnimatePresence>
     </>

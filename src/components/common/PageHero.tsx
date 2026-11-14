@@ -20,7 +20,7 @@ type PageHeroProps = {
 /** Light banner used at the top of inner pages; tucks under the floating nav on desktop. */
 export default function PageHero({ eyebrow, title, description, image, caption, actions }: PageHeroProps) {
   return (
-    <section className="under-nav relative overflow-hidden bg-mist pb-16 pt-12 md:pb-24 lg:pt-28">
+    <section className="relative overflow-hidden bg-mist pb-16 pt-12 md:pb-24 lg:pt-28">
       <div aria-hidden className="absolute -right-24 -top-24 size-[420px] rounded-full bg-brand/10" />
       <div aria-hidden className="absolute -bottom-32 left-1/3 size-[300px] rounded-full bg-brand/10" />
 

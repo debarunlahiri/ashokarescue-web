@@ -21,15 +21,18 @@ export default function MegaMenu() {
       className="absolute inset-x-0 top-full z-10"
     >
       <div className="grid max-h-[calc(100svh-var(--nav-h)-2rem)] overflow-hidden border-t-2 border-brand bg-white shadow-[0_40px_80px_-30px_rgba(16,32,121,0.5)] lg:grid-cols-[17rem_1fr]">
-        <aside className="flex flex-col justify-between bg-navy p-7 text-white">
+        <aside className="flex flex-col justify-between bg-brand-500 p-7 text-white">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-white">Our services</p>
-            <p className="mt-3 font-display text-xl font-semibold leading-snug text-white">Bedside to bedside, by air, rail and road.</p>
-            <p className="mt-3 text-sm leading-relaxed text-white/65">Not sure which option fits? Our team will help you plan the right transfer.</p>
+            <p className="mt-3 font-display text-xl font-semibold leading-snug text-white">Medical transport by air, rail and road</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/80">Our team can help you choose a transport option based on the patient’s needs and route.</p>
           </div>
           <div className="mt-7 grid gap-2">
-            <Link href="/services" className="btn btn-brand">View all services <ArrowRight className="size-4" /></Link>
-            <a href={site.phones.emergency.href} className="btn btn-outline-light"><Phone className="size-4" /> {site.phones.emergency.label}</a>
+            <Link href="/services" className="btn btn-light focus-visible:outline-white">
+              View all services
+              <ArrowRight aria-hidden className="size-4 shrink-0" />
+            </Link>
+            <a href={site.phones.emergency.href} className="btn btn-outline-light focus-visible:outline-white"><Phone className="size-4" /> {site.phones.emergency.label}</a>
           </div>
         </aside>
 
