@@ -29,7 +29,7 @@ function InfoItem({ icon: Icon, label, value, href, showLabel, external }: InfoI
       aria-label={`${label}: ${value}`}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer" : undefined}
-      className="flex items-center gap-1.5 whitespace-nowrap py-2 text-xs leading-tight text-white hover:underline focus-visible:outline-white"
+      className="flex items-center gap-1.5 whitespace-nowrap py-2 text-xs leading-tight text-brand hover:underline focus-visible:outline-brand"
     >
       <Icon aria-hidden className="size-3.5 shrink-0" />
       {showLabel && <span>{label}</span>}
@@ -62,7 +62,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="hidden bg-[#F44336] lg:block">
+      <div className="hidden bg-[#90e0ef] lg:block">
         <div className="container-x flex items-center justify-end gap-6">
           <InfoItem
             icon={Phone}
